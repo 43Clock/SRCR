@@ -31,7 +31,7 @@ utente(1,'528-76-5212','Leonardo Castro Cardoso',12,4,1925,'leonardocastrocardos
 utente(2,'050-12-8013','Antônio Dias Sousa',22,7,1969,'antoniodiassousa@gmail.com',273978687,'Aveiro','Pescador',['Diabetes'],2).
 utente(3,'528-76-5212','Alex Cavalcanti',6,2,1969,'alexFernandescavalcanti@gmail.com',244641778,'Porto','Professor',['Asma'],3).
 utente(4,'041-09-7675','Dominique Castelo Regueira',5,9,1965,'dominiquecasteloregueira@gmail.com',969248520,'Lisboa','Militar',[],6).
-utente(5,'525-89-6485','Éder Vigário Sacramento',10,7,1931,'edervigáriosacramento@gmail.com',961969458'Bragança','Talhante',['Doença renal crónica'],5).
+utente(5,'525-89-6485','Éder Vigário Sacramento',10,7,1931,'edervigáriosacramento@gmail.com',961969458,'Bragança','Talhante',['Doença renal crónica'],5).
 utente(6,'478-80-8396','Marília Castanho Dutra',16,1,1950,'maríliacastanhodutra@gmail.com',947429573,'Viseu','Advogado',['Doença respiratória crónica'],1).
 utente(7,'237-61-0624','Dário Franca Costa da Costa',27,2,1987,'dariofrancacostadacosta@gmail.com',9619584846,'Santarem','Médico',[],4).
 utente(8,'487-56-6857','Benjamin Tavares Sales',3,12,2008,'benjamintavaressales@gmail.com',9887808934,'Porto','Estudante',['Asma'],3).
@@ -49,7 +49,7 @@ centro_saude(6,'LisboaComSaúde','Lisboa',219755729,'lisboacomsaude@gmail.com').
 centro_saude(7,'ÉvoraMelhor','Évora',266926492,'evoramelhor@gmail.com').
 centro_saude(8,'ViseuSaúde','Viseu',232702759,'viseusaude@gmail.com').
 
-staff(1,1,'Tomás Rocha','tomasrocha@gmail.com').
+staff(1,1,'Tomás Rocha',',').
 staff(2,2,'João Barbosa','joaobarbosa@gmail.com').
 staff(3,3,'Aline Sousa','alinesousa@gmail.com').
 staff(4,4,'Noah Esteves','noahesteves@gmail.com').
@@ -112,9 +112,9 @@ insercao(Termo) :-
     retract(Termo),!,fail.
 
 teste([]).
-test([H|T]):-
+teste([H|T]):-
     H,
-    test(T).
+    teste(T).
 
 %-------------------------------------------------------------------------
 %Extensão do predicado que perrmite a involucao do conhecimento
@@ -137,26 +137,30 @@ solucoes(X,Y,Z) :- findall(X,Y,Z).
 % Invariante Estrutural para utente:
 % (não permite a inserção de conhecimento repetido)
 
-+utente(I,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,Doencas,CentroSaude) :: 
++utente(ID,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,[Doencas|H],CentroSaude) :: 
                                 (solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_)),L),
                                  comprimento(L,N),
                                 N == 1).
 
-+utente(I,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,Doencas,CentroSaude) :: 
++utente(ID,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,[Doencas|H],CentroSaude) :: 
                                 (solucoes(NSS,(utente(_,NSS,_,_,_,_,_,_,_,_,_,_)),L),
                                  comprimento(L,N),
                                 N == 1).
 
-+utente(I,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,Doencas,CentroSaude) :: 
++utente(ID,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,[Doencas|H],CentroSaude) :: 
                                 (solucoes(Email,(utente(_,_,_,_,_,_,Email,_,_,_,_,_)),L),
                                  comprimento(L,N),
                                 N == 1).
 
-+utente(I,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,Doencas,CentroSaude) :: 
++utente(ID,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,[Doencas|H],CentroSaude) :: 
                                 (solucoes(Tel,(utente(_,_,_,_,_,_,_,Tel,_,_,_,_)),L),
                                  comprimento(L,N),
                                 N == 1).
 
++utente(ID,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,[Doencas|H],CentroSaude) ::
+                                (solucoes(CentroSaude,(centro_saude(CentroSaude,_,_,_,_)),L),
+                                comprimento(L,N),
+                                N == 1).
 %-------------------------------------------------------------------------
 % Invariante Estrutural para vacinacao_Covid:
 % (não permite a inserção de conhecimento repetido)
@@ -171,10 +175,58 @@ solucoes(X,Y,Z) :- findall(X,Y,Z).
                                  comprimento(L,N),
                                 N == 1).
 
-%+vacinacao_Covid(Staff,Utente,Dia,Mes,Ano,Vacina,Toma) :: 
- %                   ((utente(Utente,_,_,_,_,_,_,_,_,_,_,_)),
-  %                  tomasUtente(Utente,T),T<2,
-   %                 Toma is T+1). %Verificar tambem se a vacina é a mesma
++vacinacao_Covid(Staff,Utente,Dia,Mes,Ano,Vacina,Toma) :: 
+                    ((utente(Utente,_,_,_,_,_,_,_,_,_,_,_)),
+                    tomasUtente(Utente,T),Toma=<2,
+                    Toma =:= T).
+
++vacinacao_Covid(Staff,Utente,Dia,Mes,Ano,Vacina,Toma) :: 
+                    (Toma == 1;(solucoes(Utente,vacinacao_Covid(_,Utente,_,_,_,Vacina,_),L),
+                    comprimento(L,N),
+                    N == 2)). %% Mete-se Toma == 1 para o caso em que não foi vacinado ainda
+
++vacinacao_Covid(Staff,Utente,Dia,Mes,Ano,Vacina,Toma) :: 
+                    (Toma == 1;(vacinacao_Covid(_,Utente,Dia2,Mes2,Ano2,_,1),
+                    Toma == 2,isAfter(Dia,Mes,Ano,Dia2,Mes2,Ano2))).
+
+%-------------------------------------------------------------------------
+% Invariante Estrutural para staff:
+% (não permite a inserção de conhecimento repetido)
+
++staff(Staff,Centro,Nome,Email) :: (solucoes(Staff,(staff(Staff,_,_,_)),L),
+                                    comprimento(L,N),
+                                    N == 1).
+
++staff(Staff,Centro,Nome,Email) :: (solucoes(Email,(staff(_,_,_,Email)),L),
+                                    comprimento(L,N),
+                                    N == 1).
+
++staff(Staff,Centro,Nome,Email) :: (solucoes(Centro,(centro_saude(Centro,_,_,_,_)),L),
+                                    comprimento(L,N),
+                                    N == 1).
+
+%-------------------------------------------------------------------------
+% Invariante Estrutural para centro_saude:
+% (não permite a inserção de conhecimento repetido)
+
++centro_saude(Centro,Nome,Morada,Telefone,Email) :: 
+                            (solucoes(Centro,(centro_saude(Centro,_,_,_,_)),L),
+                            comprimento(L,N),
+                            N == 1).
+
++centro_saude(Centro,Nome,Morada,Telefone,Email) :: 
+                            (solucoes(Telefone,(centro_saude(_,_,_,Telefone,_)),L),
+                            comprimento(L,N),
+                            N == 1).
+
++centro_saude(Centro,Nome,Morada,Telefone,Email) :: 
+                            (solucoes(Email,(centro_saude(_,_,_,_,Email)),L),
+                            comprimento(L,N),
+                            N == 1).
+%-------------------------------------------------------------------------
+% Invariante Estrutural para staff:
+% (não permite a inserção de conhecimento repetido)
+
 
 %-------------------------------------------------------------------------
 % Extensao do meta-predicado nao: Questao -> {V,F}
@@ -269,8 +321,14 @@ vacinacaoIncompleta(IDs):- solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
 tomasUtente(ID,Tomas):- solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,_)),T),
                         comprimento(T,Tomas).
 
+isAfter(Dia,Mes,Ano,Dia2,Mes2,Ano2):- (Ano > Ano2);(Ano == Ano2,Mes > Mes2);(Ano == Ano2,Mes == Mes2,Dia>Dia2).
 %-------------------------------------------------------------------------
 %Registar
 
 registaVacinacao(Staff,Utente,Dia,Mes,Ano,Vacina,Toma):- evolucao(vacinacao_Covid(Staff,Utente,Dia,Mes,Ano,Vacina,Toma)).
 
+registaUtente(ID,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,[Doencas|H],CentroSaude):-evolucao(utente(ID,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,[Doencas|H],CentroSaude)).
+
+registaStaff(Staff,Centro,Nome,Email):-evolucao(staff(Staff,Centro,Nome,Email)).
+
+registaCentro(Centro,Nome,Morada,Telefone,Email):-evolucao(centro_saude(Centro,Nome,Morada,Telefone,Email)).
