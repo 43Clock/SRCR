@@ -27,26 +27,49 @@
 % BASE DE CONHECIMENTO
 %--------------------------------------------------------------------------------------------
 
-utente(1,'528-76-5212','Leonardo Castro Cardoso',12,4,1925,'LeonardoCastroCardoso@gmail.com',965551716,'Braga','Carpinteiro',['Diabetes'],1).
-utente(2,'050-12-8013','Antônio Dias Sousa',22,7,1969,'AntonioDiasSousa@gmail.com',273978687,'Aveiro','Pescador',['Diabetes'],2).
-utente(3,'528-76-5212','Alex Cavalcanti',6,2,1969,'AlexFernandesCavalcanti@gmail.com',244641778,'Porto','Professor',['Asma'],3).
+utente(1,'528-76-5212','Leonardo Castro Cardoso',12,4,1925,'leonardocastrocardoso@gmail.com',965551716,'Braga','Carpinteiro',['Diabetes'],1).
+utente(2,'050-12-8013','Antônio Dias Sousa',22,7,1969,'antoniodiassousa@gmail.com',273978687,'Aveiro','Pescador',['Diabetes'],2).
+utente(3,'528-76-5212','Alex Cavalcanti',6,2,1969,'alexFernandescavalcanti@gmail.com',244641778,'Porto','Professor',['Asma'],3).
+utente(4,'041-09-7675','Dominique Castelo Regueira',5,9,1965,'dominiquecasteloregueira@gmail.com',969248520,'Lisboa','Militar',[],6).
+utente(5,'525-89-6485','Éder Vigário Sacramento',10,7,1931,'edervigáriosacramento@gmail.com',961969458'Bragança','Talhante',['Doença renal crónica'],5).
+utente(6,'478-80-8396','Marília Castanho Dutra',16,1,1950,'maríliacastanhodutra@gmail.com',947429573,'Viseu','Advogado',['Doença respiratória crónica'],1).
+utente(7,'237-61-0624','Dário Franca Costa da Costa',27,2,1987,'dariofrancacostadacosta@gmail.com',9619584846,'Santarem','Médico',[],4).
+utente(8,'487-56-6857','Benjamin Tavares Sales',3,12,2008,'benjamintavaressales@gmail.com',9887808934,'Porto','Estudante',['Asma'],3).
+utente(9,'501-19-9485','Marcelo Franqueira Portela',29,3,1972,'marcelofranqueiraportela@gmail.com',253796185,'Braga','Enfermeiro',['Diabetes'],1).
+utente(10,'247-63-4919','Lúcia Domingues Barros',17,4,1947,'luciadominguesbarros@gmail.com',938582447,'Aveiro','Arquiteta',['Insuficiência cardíaca'],2).
+utente(11,'387-05-0763','Marcelino Zarco Aveiro',3,11,1929,'marcelinozarcoaveiro@gmail.com',965772946,'Évora','Vendedor',[],6).
+utente(12,'135-52-2652','Diana Coimbra Barreira',14,12,1978,'dianacoimbrabarreira@gmail.com',968888619,'Lisboa','Polícia',[],6).
 
 centro_saude(1,'Amorosa','Braga',253465372,'amorosa@gmail.com').
-centro_saude(2,'AveiroSaude','Aveiro',283465372,'aveiroSaude@gmail.com').
-centro_saude(3,'PortoSaude','Porto',255465372,'portoSaude@gmail.com').
+centro_saude(2,'AveiroSaúde','Aveiro',283465372,'aveirosaude@gmail.com').
+centro_saude(3,'PortoSaúde','Porto',255465372,'portosaude@gmail.com').
+centro_saude(4,'SantarémClínica','Santarém',243794853,'santaremclinica@gmail.com').
+centro_saude(5,'BragançaClínica','Bragança',273888601,'bragancaclinica@gmail.com').
+centro_saude(6,'LisboaComSaúde','Lisboa',219755729,'lisboacomsaude@gmail.com').
+centro_saude(7,'ÉvoraMelhor','Évora',266926492,'evoramelhor@gmail.com').
+centro_saude(8,'ViseuSaúde','Viseu',232702759,'viseusaude@gmail.com').
 
 staff(1,1,'Tomás Rocha','tomasrocha@gmail.com').
 staff(2,2,'João Barbosa','joaobarbosa@gmail.com').
 staff(3,3,'Aline Sousa','alinesousa@gmail.com').
+staff(4,4,'Noah Esteves','noahesteves@gmail.com').
+staff(5,5,'Fábia Pescada','fabiavilarinho@gmail.com').
+staff(6,6,'Diogo Mourinho','diogomourinho@gmail.com').
+staff(7,7,'Salomé Sabrosa','salomesabrosa@gmail.com').
+staff(8,8,'Duarte Mourão','duartemourao@gmail.com').
+staff(9,4,'Cândida Castanheira','candidacastanheira@gmail.com').
+staff(10,7,'Adalberto Dias','adalbertodias@gmail.com').
 
 vacinacao_Covid(1,1,21,2,2021,'AstraZeneca',1).
 vacinacao_Covid(3,3,28,3,2021,'Pfizer',1).
-%------------------------------------------------------------
+
+%-------------------------------------------------------------------------
 % Extensão do predicado comprimento : L , R -> {V,R} 
+
 comprimento( [],0 ).
 comprimento( [_|L],N ) :-
-                    comprimento( L,N1 ),
-                    N is N1+1.
+    comprimento( L,N1 ),
+    N is N1+1.
 
 % Extensao do predicado pertence: Elemento,Lista -> {V,F}
 
@@ -56,20 +79,27 @@ pertence( X,[Y|L] ) :-
     pertence( X,L ).
 
 %Extensão do predicado idade: Ano,Idade -> {V,F}
+
 idade(Ano,Idade):- Idade is 2021-Ano.
 
 % Identificar se algum elemento de uma lista pertence a outra.
 % Extensão do predicado intersetaLista: Lista,Lista -> {V,F}
 
-intersetaLista([H],L):-pertence(H,L).
-intersetaLista([H|T],L):- pertence(H,L);intersetaLista(T,L).
+intersetaLista([H],L):- 
+    pertence(H,L).
+intersetaLista([H|T],L):- 
+    pertence(H,L);intersetaLista(T,L).
 
 % Extensão do predicado removeRepetidos:Lista,Lista -> {V,F}
+
 removeRepetidos([],[]).
-removeRepetidos([H|T],L):- pertence(H,T),removeRepetidos(T,L).
-removeRepetidos([H|T],[H|T1]):- nao(pertence(H,T)),removeRepetidos(T,T1).
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Extens�o do predicado que permite a evolucao do conhecimento
+removeRepetidos([H|T],L):- 
+    pertence(H,T),removeRepetidos(T,L).
+removeRepetidos([H|T],[H|T1]):- 
+        nao(pertence(H,T)),removeRepetidos(T,T1).
+
+%-------------------------------------------------------------------------
+% Extensão do predicado que permite a evolucao do conhecimento
 
 evolucao( Termo ) :-
     solucoes(Invariante,+Termo::Invariante,Lista),
@@ -86,8 +116,9 @@ test([H|T]):-
     H,
     test(T).
 
-%----------------------------------------------------------------
-%Extensao do predicado que perrmite a involucao do conhecimento
+%-------------------------------------------------------------------------
+%Extensão do predicado que perrmite a involucao do conhecimento
+
 involucao( Termo ) :-
     solucoes(Invariante,-Termo::Invariante,Lista),
     remocao(Termo),
@@ -99,8 +130,10 @@ remocao(Termo) :-
     assert(Termo),!,fail.
 
 % Extensão do predicado que permite a procura do conhecimento
+
 solucoes(X,Y,Z) :- findall(X,Y,Z).
-%----------------------------------------------------------------
+
+%-------------------------------------------------------------------------
 % Invariante Estrutural para utente:
 % (não permite a inserção de conhecimento repetido)
 
@@ -124,7 +157,7 @@ solucoes(X,Y,Z) :- findall(X,Y,Z).
                                  comprimento(L,N),
                                 N == 1).
 
-%----------------------------------------------------------------
+%-------------------------------------------------------------------------
 % Invariante Estrutural para vacinacao_Covid:
 % (não permite a inserção de conhecimento repetido)
 
@@ -143,7 +176,7 @@ solucoes(X,Y,Z) :- findall(X,Y,Z).
   %                  tomasUtente(Utente,T),T<2,
    %                 Toma is T+1). %Verificar tambem se a vacina é a mesma
 
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%-------------------------------------------------------------------------
 % Extensao do meta-predicado nao: Questao -> {V,F}
 
 nao( Questao ) :-
@@ -162,6 +195,7 @@ vacinacao1Fase(IDs):-solucoes(ID,(utente(ID,_,_,_,_,Ano,_,_,_,Profissao,Doencas,
                             
 profissoes1Fase(['Enfermeiro','Médico','Auxiliar de Saúde','Militar','Policia']).
 doencas1Fase(['Insuficiência cardíaca','Doença coronária','Insuficiência renal','Doença respiratória crónica','DPOC']).
+
 %-------------------------------------------------------------------------
 % Identificar os ids das pessoas aptas para a primeira fase da Vacinação
 % Extensao do predicado vacinacao2Fase : IDs -> {V,F}
@@ -173,6 +207,7 @@ vacinacao2Fase(IDs):-solucoes(ID,(utente(ID,_,_,_,_,Ano,_,_,_,_,Doencas,_),(
                             R),removeRepetidos(R,IDs).
 
 doencas2Fase(['Diabetes','Neoplasia maligna ativa','Doença renal crónica','Insuficiência hepática','Hipertensão arterial','Obesidade']).
+
 %-------------------------------------------------------------------------
 % Identificar os ids das pessoas aptas para a primeira fase da Vacinação
 % Extensao do predicado vacinacao3Fase : IDs -> {V,F}
@@ -197,6 +232,7 @@ naoVacinadas(IDs):-solucoes(ID,((utente(ID,_,_,_,_,_,_,_,_,_,_,_)),vacinadas(V),
 
 %-------------------------------------------------------------------------
 %Vacinação indevida
+
 indevidaFase1(Dia,Mes,Ano):-(Mes < 12,Ano =:= 2020);(Mes =< 12,Ano < 2020).
 indevidaFase2(Dia,Mes,Ano):-(Mes < 4,Ano =:= 2021);indevidaFase1(Dia,Mes,Ano).
 indevidaFase3(Dia,Mes,Ano):-(Mes < 9,Ano =:= 2021);indevidaFase1(Dia,Mes,Ano);indevidaFase2(Dia,Mes,Ano).%Falar no relatorio de metermos que a fase 3 começa em Setembro.
@@ -215,12 +251,14 @@ vacinacaoIndevida(IDs):- solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
 
 %-------------------------------------------------------------------------
 %Candidatos
+
 candidatoVacinacao(Fase,IDs):-solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
                                            naoVacinadas(NV),pertence(ID,NV),
                                            faseUtente(ID,F),F =:= Fase),
                                        R),removeRepetidos(R,IDs).
 
 %-------------------------------------------------------------------------
+
 tomasCompletas(IDs):-solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,2)),IDs).
 
 vacinacaoIncompleta(IDs):- solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
@@ -233,4 +271,6 @@ tomasUtente(ID,Tomas):- solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,_)),T),
 
 %-------------------------------------------------------------------------
 %Registar
+
 registaVacinacao(Staff,Utente,Dia,Mes,Ano,Vacina,Toma):- evolucao(vacinacao_Covid(Staff,Utente,Dia,Mes,Ano,Vacina,Toma)).
+
