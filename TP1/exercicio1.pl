@@ -31,14 +31,14 @@ utente(1,'528-76-5212','Leonardo Castro Cardoso',12,4,1925,'leonardocastrocardos
 utente(2,'050-12-8013','Antônio Dias Sousa',22,7,1969,'antoniodiassousa@gmail.com',273978687,'Aveiro','Pescador',['Diabetes'],2).
 utente(3,'528-76-5212','Alex Cavalcanti',6,2,1969,'alexFernandescavalcanti@gmail.com',244641778,'Porto','Professor',['Asma'],3).
 utente(4,'041-09-7675','Dominique Castelo Regueira',5,9,1965,'dominiquecasteloregueira@gmail.com',969248520,'Lisboa','Militar',[],6).
-utente(5,'525-89-6485','Éder Vigário Sacramento',10,7,1931,'edervigáriosacramento@gmail.com',961969458,'Bragança','Talhante',['Doença renal crónica'],5).
+utente(5,'525-89-6485','Éder Vigário Sacramento',10,7,1964,'edervigáriosacramento@gmail.com',961969458,'Bragança','Talhante',['Doença renal crónica'],5).
 utente(6,'478-80-8396','Marília Castanho Dutra',16,1,1950,'maríliacastanhodutra@gmail.com',947429573,'Viseu','Advogado',['Doença respiratória crónica'],1).
 utente(7,'237-61-0624','Dário Franca Costa da Costa',27,2,1987,'dariofrancacostadacosta@gmail.com',9619584846,'Santarem','Médico',[],4).
 utente(8,'487-56-6857','Benjamin Tavares Sales',3,12,2008,'benjamintavaressales@gmail.com',9887808934,'Porto','Estudante',['Asma'],3).
 utente(9,'501-19-9485','Marcelo Franqueira Portela',29,3,1972,'marcelofranqueiraportela@gmail.com',253796185,'Braga','Enfermeiro',['Diabetes'],1).
-utente(10,'247-63-4919','Lúcia Domingues Barros',17,4,1947,'luciadominguesbarros@gmail.com',938582447,'Aveiro','Arquiteta',['Insuficiência cardíaca'],2).
+utente(10,'247-63-4919','Lúcia Domingues Barros',17,4,1980,'luciadominguesbarros@gmail.com',938582447,'Aveiro','Arquiteta',['Insuficiência cardíaca'],2).
 utente(11,'387-05-0763','Marcelino Zarco Aveiro',3,11,1929,'marcelinozarcoaveiro@gmail.com',965772946,'Évora','Vendedor',[],6).
-utente(12,'135-52-2652','Diana Coimbra Barreira',14,12,1978,'dianacoimbrabarreira@gmail.com',968888619,'Lisboa','Polícia',[],6).
+utente(12,'135-52-2652','Diana Coimbra Barreira',14,12,1978,'dianacoimbrabarreira@gmail.com',968888619,'Lisboa','Mecânico',[],6).
 
 centro_saude(1,'Amorosa','Braga',253465372,'amorosa@gmail.com').
 centro_saude(2,'AveiroSaúde','Aveiro',283465372,'aveirosaude@gmail.com').
@@ -61,6 +61,7 @@ staff(9,4,'Cândida Castanheira','candidacastanheira@gmail.com').
 staff(10,7,'Adalberto Dias','adalbertodias@gmail.com').
 
 vacinacao_Covid(1,1,21,2,2021,'AstraZeneca',1).
+vacinacao_Covid(1,1,21,3,2021,'AstraZeneca',2).
 vacinacao_Covid(3,3,28,3,2021,'Pfizer',1).
 
 %-------------------------------------------------------------------------
@@ -81,6 +82,7 @@ pertence( X,[Y|L] ) :-
 %Extensão do predicado idade: Ano,Idade -> {V,F}
 
 idade(Ano,Idade):- Idade is 2021-Ano.
+
 
 % Identificar se algum elemento de uma lista pertence a outra.
 % Extensão do predicado intersetaLista: Lista,Lista -> {V,F}
@@ -175,16 +177,19 @@ solucoes(X,Y,Z) :- findall(X,Y,Z).
                                  comprimento(L,N),
                                 N == 1).
 
+%Ver se é tomar certa
 +vacinacao_Covid(_,Utente,_,_,_,_,Toma) :: 
                     ((utente(Utente,_,_,_,_,_,_,_,_,_,_,_)),
                     tomasUtente(Utente,T),Toma=<2,
                     Toma =:= T).
 
+%Ver se a vacina da primeira é igual à da segunda
 +vacinacao_Covid(_,Utente,_,_,_,Vacina,Toma) :: 
                     (Toma == 1;(solucoes(Utente,vacinacao_Covid(_,Utente,_,_,_,Vacina,_),L),
                     comprimento(L,N),
                     N == 2)). %% Mete-se Toma == 1 para o caso em que não foi vacinado ainda
 
+%Ver se a data da segunda toma é dps da primeira
 +vacinacao_Covid(_,Utente,Dia,Mes,Ano,_,Toma) :: 
                     (Toma == 1;(vacinacao_Covid(_,Utente,Dia2,Mes2,Ano2,_,1),
                     Toma == 2,isAfter(Dia,Mes,Ano,Dia2,Mes2,Ano2))).
@@ -225,6 +230,7 @@ solucoes(X,Y,Z) :- findall(X,Y,Z).
                             N == 1).
 %-------------------------------------------------------------------------
 
+%Impede de remover se tiver vacinas
 -utente(ID,_,_,_,_,_,_,_,_,_,_,_) ::
                             (solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,_)),L),
                              comprimento(L,N),
@@ -263,7 +269,7 @@ vacinacao1Fase(IDs):-solucoes(ID,(utente(ID,_,_,_,_,Ano,_,_,_,Profissao,Doencas,
                                     (idade(Ano,Idade) ,Idade>=50, doencas1Fase(D),intersetaLista(Doencas,D)))),
                              R),removeRepetidos(R,IDs).
                             
-profissoes1Fase(['Enfermeiro','Médico','Auxiliar de Saúde','Militar','Policia']).
+profissoes1Fase(['Enfermeiro','Médico','Auxiliar de Saúde','Militar','Polícia']).
 doencas1Fase(['Insuficiência cardíaca','Doença coronária','Insuficiência renal','Doença respiratória crónica','DPOC']).
 
 %-------------------------------------------------------------------------
@@ -359,3 +365,99 @@ removerUtente(ID):-involucao(utente(ID,_,_,_,_,_,_,_,_,_,_,_)).
 removerStaff(Staff):-involucao(staff(Staff,_,_,_)).
 
 removerCentro(Centro):-involucao(centro_saude(Centro,_,_,_,_)).
+
+removerVacinas([]).
+removerVacinas([H|T]):-involucao(vacinacao_Covid(_,H,_,_,_,_,_)),removerVacinas(T).
+
+forceRemoverUtente(ID):-(solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,_)),R)),
+                            removerVacinas(R),removerUtente(ID).
+
+%-------------------------------------------------------------------------
+%EXTRA
+%Identificar Staff que não vacinou ninguem.
+staffSemVacinacao(IDs):-solucoes(ID,(staff(ID,_,_,_),
+                                    staffComVacinacao(R),nao(pertence(ID,R)))
+                                    ,IDs).
+
+%Identificar Staff que vacinou alguem.
+staffComVacinacao(IDs):-solucoes(ID,(vacinacao_Covid(ID,_,_,_,_,_,_)),IDs).
+
+%Staff que vacinou um utente
+staffDeUtente(Utente,IDs):-solucoes((ID,Nome),(vacinacao_Covid(ID,Utente,_,_,_,_,_),staff(ID,_,Nome,_)),IDs).
+
+%Staff que pertence a centro.
+staffDeCentro(Centro,IDs):-solucoes((ID,Nome),(staff(ID,Centro,Nome,_)),IDs).
+
+ocurrenciasVacina(_,[],0).
+ocurrenciasVacina(X,[X|T],Y):- ocurrenciasVacina(X,T,Z),Y is Z+1.
+ocurrenciasVacina(X,[_|T],Z):- ocurrenciasVacina(X,T,Z).
+
+vacinasToTupleList([],_,_).
+vacinasToTupleList([H],V,[(H,R)]):-ocurrenciasVacina(H,V,R).
+vacinasToTupleList([H|T],V,[(H,R)|L]):-ocurrenciasVacina(H,V,R),vacinasToTupleList(T,V,L).
+
+%Lista todas as vacinas dadas num centro e a quantidade
+vacinasPorCentro(Centro,Vacinas):- (solucoes(Vacina,(vacinacao_Covid(Staff,_,_,_,_,Vacina,_),
+                                             staff(Staff,Centro,_,_)),R),
+                                    removeRepetidos(R,L),vacinasToTupleList(L,R,Vacinas)).
+
+
+
+
+listaUtentes(R) :- solucoes((Id,Nome),(utente(Id,_,Nome,_,_,_,_,_,_,_,_,_)),R).
+
+listaVacinas(R) :- solucoes((Staff,Utente,Vacina,Toma),(vacinacao_Covid(Staff,Utente,_,_,_,Vacina,Toma)),R).
+
+listaStaff(R) :- solucoes((Staff,Nome,Centro),(staff(Staff,Centro,Nome,_)),R).
+
+listaCentros(R) :- solucoes((Centro,Nome),(centro_saude(Centro,Nome,_,_,_)),R).
+
+vacinasPorStaff(Staff,R) :- solucoes((Staff),vacinacao_Covid(Staff,_,_,_,_,_,_),L),comprimento(L,R).
+
+
+maiorTuplo( (Z,X), (_,Y), (Z,X) ) :-
+    X > Y.
+maiorTuplo( (_,X),(W,Y),(W,Y) ) :-
+    X =< Y.
+
+
+maiorTuploLista( [X],X ).
+maiorTuploLista( [X|Y],N ) :-
+    maiorTuploLista( Y,Z ),
+        maiorTuplo( X,Z,N ).
+
+%Staff que vacinou mais
+staffMaisVacinas(R) :- solucoes((Staff,N),(staff(Staff,_,_,_), 
+					   vacinasPorStaff(Staff,N)), X),
+					   maiorTuploLista(X,R).
+
+
+numeroVacinasPorCentro(Centro,R) :- solucoes((Vacina),(staff(Staff,Centro,_,_),
+					        vacinacao_Covid(Staff,_,_,_,_,Vacina,_)),L),
+					        comprimento(L,R).
+
+centroMaisVacinas(R) :- solucoes((Centro,N),(centro_saude(Centro,_,_,_,_), 
+					     numeroVacinasPorCentro(Centro,N)), X),
+					     maiorTuploLista(X,R).
+
+numeroUtentesCentro(Centro,R) :- solucoes(ID,utente(ID,_,_,_,_,_,_,_,_,_,_,Centro),X),comprimento(X,R).
+
+utentesCentro(Centro,R) :- solucoes((ID,Nome),utente(ID,_,Nome,_,_,_,_,_,_,_,_,Centro),R).
+
+vacinacaoIndevidaStaff(IDs):- solucoes(Staff,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
+					      vacinacao_Covid(Staff,ID,Dia,Mes,Ano,_,_),
+                                      	      faseUtente(ID,Fase),
+                                      	      ((Fase =:= 1,indevidaFase1(Dia,Mes,Ano));
+                                              (Fase =:= 2,indevidaFase2(Dia,Mes,Ano));
+                                              (Fase =:= 3,indevidaFase3(Dia,Mes,Ano)))),
+                                      R),removeRepetidos(R,IDs).
+
+
+vacinacaoIndevidaCentro(IDs):- solucoes(Centro,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),						
+					        vacinacao_Covid(Staff,ID,Dia,Mes,Ano,_,_),
+                                                staff(Staff,Centro,_,_),
+                                      	        faseUtente(ID,Fase),
+                                      	        ((Fase =:= 1,indevidaFase1(Dia,Mes,Ano));
+                                                (Fase =:= 2,indevidaFase2(Dia,Mes,Ano));
+                                                (Fase =:= 3,indevidaFase3(Dia,Mes,Ano)))),
+                                        R),removeRepetidos(R,IDs).
