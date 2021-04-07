@@ -371,6 +371,10 @@ removerVacinas([H|T]):-involucao(vacinacao_Covid(_,H,_,_,_,_,_)),removerVacinas(
 
 forceRemoverUtente(ID):-(solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,_)),R)),
                             removerVacinas(R),removerUtente(ID).
+%-------------------------------------------------------------------------
+
+inferencia(Questao,false):- -Questao.
+inferencia(Questao,true):- Questao.
 
 %-------------------------------------------------------------------------
 %EXTRA
