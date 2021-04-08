@@ -309,7 +309,7 @@ vacinacao3Fase(IDs):-solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
 % Identificar os ids das pessoas Vacinadas
 % Extensao do predicado vacinadas : IDs -> {V,F}
 
-vacinadas(IDs) :- solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),vacinacao_Covid(_,ID,_,_,_,_,_)),R),
+vacinadas(IDs) :- solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,_)),R),
                             removeRepetidos(R,IDs).
 
 
@@ -322,9 +322,9 @@ naoVacinadas(IDs):-solucoes(ID,((utente(ID,_,_,_,_,_,_,_,_,_,_,_)),vacinadas(V),
 %-------------------------------------------------------------------------
 %Vacinação indevida
 
-indevidaFase1(_,Mes,Ano):-(Mes < 12,Ano =:= 2020);(Mes =< 12,Ano < 2020).
-indevidaFase2(Dia,Mes,Ano):-(Mes < 4,Ano =:= 2021);indevidaFase1(Dia,Mes,Ano).
-indevidaFase3(Dia,Mes,Ano):-(Mes < 9,Ano =:= 2021);indevidaFase1(Dia,Mes,Ano);indevidaFase2(Dia,Mes,Ano).%Falar no relatorio de metermos que a fase 3 começa em Setembro.
+indevidaFase1(_,Mes,Ano):-(Mes < 12,Ano == 2020);(Mes =< 12,Ano < 2020).
+indevidaFase2(Dia,Mes,Ano):-(Mes < 4,Ano == 2021);indevidaFase1(Dia,Mes,Ano).
+indevidaFase3(Dia,Mes,Ano):-(Mes < 9,Ano == 2021);indevidaFase1(Dia,Mes,Ano);indevidaFase2(Dia,Mes,Ano).%Falar no relatorio de metermos que a fase 3 começa em Setembro.
 
 faseUtente(ID,Fase):-vacinacao1Fase(V),pertence(ID,V),Fase is 1.
 faseUtente(ID,Fase):-vacinacao2Fase(V),pertence(ID,V),Fase is 2.
@@ -333,9 +333,9 @@ faseUtente(ID,Fase):-vacinacao3Fase(V),pertence(ID,V),Fase is 3.
 vacinacaoIndevida(IDs):- solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
                                       vacinacao_Covid(_,ID,Dia,Mes,Ano,_,_),
                                       faseUtente(ID,Fase),
-                                      ((Fase =:= 1,indevidaFase1(Dia,Mes,Ano));
-                                       (Fase =:= 2,indevidaFase2(Dia,Mes,Ano));
-                                       (Fase =:= 3,indevidaFase3(Dia,Mes,Ano)))),
+                                      ((Fase == 1,indevidaFase1(Dia,Mes,Ano));
+                                       (Fase == 2,indevidaFase2(Dia,Mes,Ano));
+                                       (Fase == 3,indevidaFase3(Dia,Mes,Ano)))),
                                 R),removeRepetidos(R,IDs).
 
 %-------------------------------------------------------------------------
@@ -358,7 +358,7 @@ vacinacaoIncompleta(IDs):- solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
 tomasUtente(ID,Tomas):- solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,_)),T),
                         comprimento(T,Tomas).
 
-isAfter(Dia,Mes,Ano,Dia2,Mes2,Ano2):- (Ano > Ano2);(Ano == Ano2,Mes > Mes2);(Ano == Ano2,Mes == Mes2,Dia>Dia2).
+isAfter(Dia,Mes,Ano,Dia2,Mes2,Ano2):- (Ano > Ano2);(Ano =:= Ano2,Mes > Mes2);(Ano =:= Ano2,Mes =:= Mes2,Dia>Dia2).
 %-------------------------------------------------------------------------
 %Registar
 
@@ -405,13 +405,13 @@ staffDeUtente(Utente,IDs):-solucoes((ID,Nome),(vacinacao_Covid(ID,Utente,_,_,_,_
 %Staff que pertence a centro.
 staffDeCentro(Centro,IDs):-solucoes((ID,Nome),(staff(ID,Centro,Nome,_)),IDs).
 
-ocurrenciasVacina(_,[],0).
-ocurrenciasVacina(X,[X|T],Y):- ocurrenciasVacina(X,T,Z),Y is Z+1.
-ocurrenciasVacina(X,[_|T],Z):- ocurrenciasVacina(X,T,Z).
+ocorrenciasVacina(_,[],0).
+ocorrenciasVacina(X,[X|T],Y):- ocorrenciasVacina(X,T,Z),Y is Z+1.
+ocorrenciasVacina(X,[_|T],Z):- ocorrenciasVacina(X,T,Z).
 
 vacinasToTupleList([],_,_).
-vacinasToTupleList([H],V,[(H,R)]):-ocurrenciasVacina(H,V,R).
-vacinasToTupleList([H|T],V,[(H,R)|L]):-ocurrenciasVacina(H,V,R),vacinasToTupleList(T,V,L).
+vacinasToTupleList([H],V,[(H,R)]):-ocorrenciasVacina(H,V,R).
+vacinasToTupleList([H|T],V,[(H,R)|L]):-ocorrenciasVacina(H,V,R),vacinasToTupleList(T,V,L).
 
 %Lista todas as vacinas dadas num centro e a quantidade
 vacinasPorCentro(Centro,Vacinas):- (solucoes(Vacina,(vacinacao_Covid(Staff,_,_,_,_,Vacina,_),
@@ -464,9 +464,9 @@ utentesCentro(Centro,R) :- solucoes((ID,Nome),utente(ID,_,Nome,_,_,_,_,_,_,_,_,C
 vacinacaoIndevidaStaff(IDs):- solucoes(Staff,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
 					      vacinacao_Covid(Staff,ID,Dia,Mes,Ano,_,_),
                                       	      faseUtente(ID,Fase),
-                                      	      ((Fase =:= 1,indevidaFase1(Dia,Mes,Ano));
-                                              (Fase =:= 2,indevidaFase2(Dia,Mes,Ano));
-                                              (Fase =:= 3,indevidaFase3(Dia,Mes,Ano)))),
+                                      	      ((Fase == 1,indevidaFase1(Dia,Mes,Ano));
+                                              (Fase == 2,indevidaFase2(Dia,Mes,Ano));
+                                              (Fase == 3,indevidaFase3(Dia,Mes,Ano)))),
                                       R),removeRepetidos(R,IDs).
 
 
@@ -474,7 +474,7 @@ vacinacaoIndevidaCentro(IDs):- solucoes(Centro,(utente(ID,_,_,_,_,_,_,_,_,_,_,_)
 					        vacinacao_Covid(Staff,ID,Dia,Mes,Ano,_,_),
                                                 staff(Staff,Centro,_,_),
                                       	        faseUtente(ID,Fase),
-                                      	        ((Fase =:= 1,indevidaFase1(Dia,Mes,Ano));
-                                                (Fase =:= 2,indevidaFase2(Dia,Mes,Ano));
-                                                (Fase =:= 3,indevidaFase3(Dia,Mes,Ano)))),
+                                      	        ((Fase == 1,indevidaFase1(Dia,Mes,Ano));
+                                                (Fase == 2,indevidaFase2(Dia,Mes,Ano));
+                                                (Fase == 3,indevidaFase3(Dia,Mes,Ano)))),
                                         R),removeRepetidos(R,IDs).
