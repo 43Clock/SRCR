@@ -31,14 +31,17 @@ utente(1,'528-76-5212','Leonardo Castro Cardoso',12,4,1925,'leonardocastrocardos
 utente(2,'050-12-8013','Antônio Dias Sousa',22,7,1969,'antoniodiassousa@gmail.com',273978687,'Aveiro','Pescador',['Diabetes'],2).
 utente(3,'528-76-5212','Alex Cavalcanti',6,2,1969,'alexFernandescavalcanti@gmail.com',244641778,'Porto','Professor',['Asma'],3).
 utente(4,'041-09-7675','Dominique Castelo Regueira',5,9,1965,'dominiquecasteloregueira@gmail.com',969248520,'Lisboa','Militar',[],6).
-utente(5,'525-89-6485','Éder Vigário Sacramento',10,7,1964,'edervigáriosacramento@gmail.com',961969458,'Bragança','Talhante',['Doença renal crónica'],5).
-utente(6,'478-80-8396','Marília Castanho Dutra',16,1,1950,'maríliacastanhodutra@gmail.com',947429573,'Viseu','Advogado',['Doença respiratória crónica'],1).
+utente(5,'525-89-6485','Éder Vigário Sacramento',10,7,1931,'edervigáriosacramento@gmail.com',961969458'Bragança','Talhante',['Doença renal crónica'],5).
+utente(6,'478-80-8396','Marília Castanho Dutra',16,1,1950,'maríliacastanhodutra@gmail.com',947429573,'Viseu','Advogado',['Doença respiratória crónica'],8).
 utente(7,'237-61-0624','Dário Franca Costa da Costa',27,2,1987,'dariofrancacostadacosta@gmail.com',9619584846,'Santarem','Médico',[],4).
 utente(8,'487-56-6857','Benjamin Tavares Sales',3,12,2008,'benjamintavaressales@gmail.com',9887808934,'Porto','Estudante',['Asma'],3).
 utente(9,'501-19-9485','Marcelo Franqueira Portela',29,3,1972,'marcelofranqueiraportela@gmail.com',253796185,'Braga','Enfermeiro',['Diabetes'],1).
-utente(10,'247-63-4919','Lúcia Domingues Barros',17,4,1980,'luciadominguesbarros@gmail.com',938582447,'Aveiro','Arquiteta',['Insuficiência cardíaca'],2).
-utente(11,'387-05-0763','Marcelino Zarco Aveiro',3,11,1929,'marcelinozarcoaveiro@gmail.com',965772946,'Évora','Vendedor',[],6).
-utente(12,'135-52-2652','Diana Coimbra Barreira',14,12,1978,'dianacoimbrabarreira@gmail.com',968888619,'Lisboa','Mecânico',[],6).
+utente(10,'247-63-4919','Lúcia Domingues Barros',17,4,1947,'luciadominguesbarros@gmail.com',938582447,'Aveiro','Arquiteta',['Insuficiência cardíaca'],2).
+utente(11,'387-05-0763','Marcelino Zarco Aveiro',3,11,1929,'marcelinozarcoaveiro@gmail.com',965772946,'Évora','Vendedor',[],7).
+utente(12,'135-52-2652','Diana Coimbra Barreira',14,12,1978,'dianacoimbrabarreira@gmail.com',968888619,'Lisboa','Polícia',[],6).
+utente(13,'247-17-6120','Manuel Lourenço Garcia Faria Machado',20,1,1953,'manuelmachado@gmail.com',936885900,'Santarém','Pasteleiro',['Obesidade'],4).
+utente(14,'303-11-9515','Eduarda Cruz Pires',18,7,1965,'eduardres@gmail.com',927118463,'Bragança','Segurança',['Neoplasia maligna ativa'],5).
+
 
 centro_saude(1,'Amorosa','Braga',253465372,'amorosa@gmail.com').
 centro_saude(2,'AveiroSaúde','Aveiro',283465372,'aveirosaude@gmail.com').
@@ -49,7 +52,7 @@ centro_saude(6,'LisboaComSaúde','Lisboa',219755729,'lisboacomsaude@gmail.com').
 centro_saude(7,'ÉvoraMelhor','Évora',266926492,'evoramelhor@gmail.com').
 centro_saude(8,'ViseuSaúde','Viseu',232702759,'viseusaude@gmail.com').
 
-staff(1,1,'Tomás Rocha',',').
+staff(1,1,'Tomás Rocha','tomasrocha@gmail.com').
 staff(2,2,'João Barbosa','joaobarbosa@gmail.com').
 staff(3,3,'Aline Sousa','alinesousa@gmail.com').
 staff(4,4,'Noah Esteves','noahesteves@gmail.com').
@@ -61,8 +64,17 @@ staff(9,4,'Cândida Castanheira','candidacastanheira@gmail.com').
 staff(10,7,'Adalberto Dias','adalbertodias@gmail.com').
 
 vacinacao_Covid(1,1,21,2,2021,'AstraZeneca',1).
-vacinacao_Covid(1,1,21,3,2021,'AstraZeneca',2).
 vacinacao_Covid(3,3,28,3,2021,'Pfizer',1).
+vacinacao_Covid(1,1,29,2,2021,'AstraZeneca',2).
+vacinacao_Covid(6,4,22,2,2021,'Pfizer',1).
+vacinacao_Covid(6,4,1,3,2021,'Pfizer',2).
+vacinacao_Covid(5,5,12,5,2021,'Moderna',1).
+vacinacao_Covid(5,5,20,5,2021,'Moderna',2).
+vacinacao_Covid(2,10,2,10,2021,'AstraZeneca',1).
+vacinacao_Covid(9,13,10,6,2021,'Moderna',1).
+vacinacao_Covid(4,13,17,6,2021,'Moderna',2).
+vacinacao_Covid(5,14,2,6,2021,'AstraZeneca',1).
+vacinacao_Covid(5,14,10,6,2021,'AstraZeneca',2).
 
 %-------------------------------------------------------------------------
 % Extensão do predicado comprimento : L , R -> {V,R} 
