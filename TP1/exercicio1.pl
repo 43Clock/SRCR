@@ -31,14 +31,14 @@ utente(1,'528-76-5212','Leonardo Castro Cardoso',12,4,1925,'leonardocastrocardos
 utente(2,'050-12-8013','Antônio Dias Sousa',22,7,1969,'antoniodiassousa@gmail.com',273978687,'Aveiro','Pescador',['Diabetes'],2).
 utente(3,'528-76-5212','Alex Cavalcanti',6,2,1969,'alexFernandescavalcanti@gmail.com',244641778,'Porto','Professor',['Asma'],3).
 utente(4,'041-09-7675','Dominique Castelo Regueira',5,9,1965,'dominiquecasteloregueira@gmail.com',969248520,'Lisboa','Militar',[],6).
-utente(5,'525-89-6485','Éder Vigário Sacramento',10,7,1931,'edervigáriosacramento@gmail.com',961969458'Bragança','Talhante',['Doença renal crónica'],5).
+utente(5,'525-89-6485','Éder Vigário Sacramento',10,7,1970,'edervigáriosacramento@gmail.com',961969458,'Bragança','Talhante',['Doença renal crónica'],5).
 utente(6,'478-80-8396','Marília Castanho Dutra',16,1,1950,'maríliacastanhodutra@gmail.com',947429573,'Viseu','Advogado',['Doença respiratória crónica'],8).
 utente(7,'237-61-0624','Dário Franca Costa da Costa',27,2,1987,'dariofrancacostadacosta@gmail.com',9619584846,'Santarem','Médico',[],4).
 utente(8,'487-56-6857','Benjamin Tavares Sales',3,12,2008,'benjamintavaressales@gmail.com',9887808934,'Porto','Estudante',['Asma'],3).
 utente(9,'501-19-9485','Marcelo Franqueira Portela',29,3,1972,'marcelofranqueiraportela@gmail.com',253796185,'Braga','Enfermeiro',['Diabetes'],1).
-utente(10,'247-63-4919','Lúcia Domingues Barros',17,4,1947,'luciadominguesbarros@gmail.com',938582447,'Aveiro','Arquiteta',['Insuficiência cardíaca'],2).
+utente(10,'247-63-4919','Lúcia Domingues Barros',17,4,1979,'luciadominguesbarros@gmail.com',938582447,'Aveiro','Arquiteta',['Insuficiência cardíaca'],2).
 utente(11,'387-05-0763','Marcelino Zarco Aveiro',3,11,1929,'marcelinozarcoaveiro@gmail.com',965772946,'Évora','Vendedor',[],7).
-utente(12,'135-52-2652','Diana Coimbra Barreira',14,12,1978,'dianacoimbrabarreira@gmail.com',968888619,'Lisboa','Polícia',[],6).
+utente(12,'135-52-2652','Diana Coimbra Barreira',14,12,1978,'dianacoimbrabarreira@gmail.com',968888619,'Lisboa','Barbeiro',[],6).
 utente(13,'247-17-6120','Manuel Lourenço Garcia Faria Machado',20,1,1953,'manuelmachado@gmail.com',936885900,'Santarém','Pasteleiro',['Obesidade'],4).
 utente(14,'303-11-9515','Eduarda Cruz Pires',18,7,1965,'eduardres@gmail.com',927118463,'Bragança','Segurança',['Neoplasia maligna ativa'],5).
 
@@ -70,7 +70,7 @@ vacinacao_Covid(6,4,22,2,2021,'Pfizer',1).
 vacinacao_Covid(6,4,1,3,2021,'Pfizer',2).
 vacinacao_Covid(5,5,12,5,2021,'Moderna',1).
 vacinacao_Covid(5,5,20,5,2021,'Moderna',2).
-vacinacao_Covid(2,10,2,10,2021,'AstraZeneca',1).
+vacinacao_Covid(2,10,2,5,2021,'AstraZeneca',1).
 vacinacao_Covid(9,13,10,6,2021,'Moderna',1).
 vacinacao_Covid(4,13,17,6,2021,'Moderna',2).
 vacinacao_Covid(5,14,2,6,2021,'AstraZeneca',1).
@@ -309,7 +309,8 @@ vacinacao3Fase(IDs):-solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
 % Identificar os ids das pessoas Vacinadas
 % Extensao do predicado vacinadas : IDs -> {V,F}
 
-vacinadas(IDs) :- solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),vacinacao_Covid(_,ID,_,_,_,_,_)),IDs).
+vacinadas(IDs) :- solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),vacinacao_Covid(_,ID,_,_,_,_,_)),R),
+                            removeRepetidos(R,IDs).
 
 
 %-------------------------------------------------------------------------
@@ -396,7 +397,7 @@ staffSemVacinacao(IDs):-solucoes(ID,(staff(ID,_,_,_),
                                     ,IDs).
 
 %Identificar Staff que vacinou alguem.
-staffComVacinacao(IDs):-solucoes(ID,(vacinacao_Covid(ID,_,_,_,_,_,_)),IDs).
+staffComVacinacao(IDs):-solucoes(ID,(vacinacao_Covid(ID,_,_,_,_,_,_)),R),removeRepetidos(R,IDs).
 
 %Staff que vacinou um utente
 staffDeUtente(Utente,IDs):-solucoes((ID,Nome),(vacinacao_Covid(ID,Utente,_,_,_,_,_),staff(ID,_,Nome,_)),IDs).
