@@ -133,8 +133,8 @@ teste([H|T]):-
 
 involucao( Termo ) :-
     solucoes(Invariante,-Termo::Invariante,Lista),
-    remocao(Termo),
-    teste(Lista).
+    teste(Lista),
+    remocao(Termo).
 
 remocao(Termo) :-
     retract(Termo).
