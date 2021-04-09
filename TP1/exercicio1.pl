@@ -12,7 +12,6 @@
 
 :- set_prolog_flag( discontiguous_warnings,off ).
 :- set_prolog_flag( single_var_warnings,off ).
-:- set_prolog_flag( unknown,fail ).
 
 %--------------------------------------------------------------------------------------------
 % Definição de invariante
@@ -419,15 +418,6 @@ vacinasPorCentro(Centro,Vacinas):- (solucoes(Vacina,(vacinacao_Covid(Staff,_,_,_
                                     removeRepetidos(R,L),vacinasToTupleList(L,R,Vacinas)).
 
 
-
-
-listaUtentes(R) :- solucoes((Id,Nome),(utente(Id,_,Nome,_,_,_,_,_,_,_,_,_)),R).
-
-listaVacinas(R) :- solucoes((Staff,Utente,Vacina,Toma),(vacinacao_Covid(Staff,Utente,_,_,_,Vacina,Toma)),R).
-
-listaStaff(R) :- solucoes((Staff,Nome,Centro),(staff(Staff,Centro,Nome,_)),R).
-
-listaCentros(R) :- solucoes((Centro,Nome),(centro_saude(Centro,Nome,_,_,_)),R).
 
 vacinasPorStaff(Staff,R) :- solucoes((Staff),vacinacao_Covid(Staff,_,_,_,_,_,_),L),comprimento(L,R).
 
