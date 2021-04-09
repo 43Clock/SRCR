@@ -91,7 +91,6 @@ pertence( X,[Y|L] ) :-
     pertence( X,L ).
 
 %Extensão do predicado idade: Ano,Idade -> {V,F}
-
 idade(Ano,Idade):- Idade is 2021-Ano.
 
 
@@ -150,57 +149,63 @@ solucoes(X,Y,Z) :- findall(X,Y,Z).
 % Invariante Estrutural para utente:
 % (não permite a inserção de conhecimento repetido)
 
+%Não permite adicionar um Utente com um ID ja existente na base de conhecimento
 +utente(ID,_,_,_,_,_,_,_,_,_,_,_) :: 
                                 (solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_)),L),
                                  comprimento(L,N),
                                 N == 1).
 
+%Não permite adicionar um Utente com um NSS ja existente na base de conhecimento
 +utente(_,NSS,_,_,_,_,_,_,_,_,_,_) :: 
                                 (solucoes(NSS,(utente(_,NSS,_,_,_,_,_,_,_,_,_,_)),L),
                                  comprimento(L,N),
                                 N == 1).
 
+%Não permite adicionar um Utente com um Email ja existente na base de conhecimento
 +utente(_,_,_,_,_,_,Email,_,_,_,_,_) :: 
                                 (solucoes(Email,(utente(_,_,_,_,_,_,Email,_,_,_,_,_)),L),
                                  comprimento(L,N),
                                 N == 1).
 
+%Não permite adicionar um Utente com um numero de Telemovel ja existente na base de conhecimento
 +utente(_,_,_,_,_,_,_,Tel,_,_,_,_) :: 
                                 (solucoes(Tel,(utente(_,_,_,_,_,_,_,Tel,_,_,_,_)),L),
                                  comprimento(L,N),
                                 N == 1).
 
+%Não permite adicionar um Utente com um centro de Saude não existente na base de conhecimento
 +utente(_,_,_,_,_,_,_,_,_,_,_,CentroSaude) ::
                                 (solucoes(CentroSaude,(centro_saude(CentroSaude,_,_,_,_)),L),
                                 comprimento(L,N),
                                 N == 1).
 %-------------------------------------------------------------------------
 % Invariante Estrutural para vacinacao_Covid:
-% (não permite a inserção de conhecimento repetido)
 
+%Não permite adicionar uma vacinação com um utente que não existe na base de conhecimento
 +vacinacao_Covid(_,Utente,_,_,_,_,_) ::
                                 (solucoes(Utente,(utente(Utente,_,_,_,_,_,_,_,_,_,_,_)),L),
                                  comprimento(L,N),
                                 N == 1).
 
+%Não permite adicionar uma vacinação com um staff que não existe na base de conhecimento
 +vacinacao_Covid(Staff,_,_,_,_,_,_) ::
                                 (solucoes(Staff,(staff(Staff,_,_,_)),L),
                                  comprimento(L,N),
                                 N == 1).
 
-%Ver se é tomar certa
+%Garante que a inserção das vacinas é por ordem e que não possa haver mais do que duas tomas
 +vacinacao_Covid(_,Utente,_,_,_,_,Toma) :: 
                     ((utente(Utente,_,_,_,_,_,_,_,_,_,_,_)),
                     tomasUtente(Utente,T),Toma=<2,
                     Toma =:= T).
 
-%Ver se a vacina da primeira é igual à da segunda
+%Garante que vacina da primeira toma é igual à da segunda
 +vacinacao_Covid(_,Utente,_,_,_,Vacina,Toma) :: 
                     (Toma == 1;(solucoes(Utente,vacinacao_Covid(_,Utente,_,_,_,Vacina,_),L),
                     comprimento(L,N),
                     N == 2)). %% Mete-se Toma == 1 para o caso em que não foi vacinado ainda
 
-%Ver se a data da segunda toma é dps da primeira
+%Garante que a data da segunda toma é depois da primeira
 +vacinacao_Covid(_,Utente,Dia,Mes,Ano,_,Toma) :: 
                     (Toma == 1;(vacinacao_Covid(_,Utente,Dia2,Mes2,Ano2,_,1),
                     Toma == 2,isAfter(Dia,Mes,Ano,Dia2,Mes2,Ano2))).
@@ -419,8 +424,10 @@ vacinasPorCentro(Centro,Vacinas):- (solucoes(Vacina,(vacinacao_Covid(Staff,_,_,_
 
 
 
-vacinasPorStaff(Staff,R) :- solucoes((Staff),vacinacao_Covid(Staff,_,_,_,_,_,_),L),comprimento(L,R).
+numeroVacinasPorStaff(Staff,R) :- solucoes((Staff),vacinacao_Covid(Staff,_,_,_,_,_,_),L),comprimento(L,R).
 
+vacinasPorStaff(Staff,Vacinas):- (solucoes(Vacina,(vacinacao_Covid(Staff,_,_,_,_,Vacina,_)),R),
+                                    removeRepetidos(R,L),vacinasToTupleList(L,R,Vacinas)).
 
 maiorTuplo( (Z,X), (_,Y), (Z,X) ) :-
     X > Y.
