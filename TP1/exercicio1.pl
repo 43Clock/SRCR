@@ -212,57 +212,66 @@ solucoes(X,Y,Z) :- findall(X,Y,Z).
 
 %-------------------------------------------------------------------------
 % Invariante Estrutural para staff:
-% (não permite a inserção de conhecimento repetido)
 
+%Não permite adicionar um Staff com um ID ja existente na base de conhecimento
 +staff(Staff,_,_,_) :: (solucoes(Staff,(staff(Staff,_,_,_)),L),
                                     comprimento(L,N),
                                     N == 1).
 
+%Não permite adicionar um Staff com um Email ja existente na base de conhecimento
 +staff(_,_,_,Email) :: (solucoes(Email,(staff(_,_,_,Email)),L),
                                     comprimento(L,N),
                                     N == 1).
 
+%Não permite adicionar um Staff com um centro de Saude não existente na base de conhecimento                                
 +staff(_,Centro,_,_) :: (solucoes(Centro,(centro_saude(Centro,_,_,_,_)),L),
                                     comprimento(L,N),
                                     N == 1).
 
 %-------------------------------------------------------------------------
 % Invariante Estrutural para centro_saude:
-% (não permite a inserção de conhecimento repetido)
 
+%Não permite adicionar um Centro de Saude com um ID ja existente na base de conhecimento
 +centro_saude(Centro,_,_,_,_) :: 
                             (solucoes(Centro,(centro_saude(Centro,_,_,_,_)),L),
                             comprimento(L,N),
                             N == 1).
 
+%Não permite adicionar um Centro de Saude com um numero de Telefone ja existente na base de conhecimento
 +centro_saude(_,_,_,Telefone,_) :: 
                             (solucoes(Telefone,(centro_saude(_,_,_,Telefone,_)),L),
                             comprimento(L,N),
                             N == 1).
 
+%Não permite adicionar um Centro de Saude com um email ja existente na base de conhecimento
 +centro_saude(_,_,_,_,Email) :: 
                             (solucoes(Email,(centro_saude(_,_,_,_,Email)),L),
                             comprimento(L,N),
                             N == 1).
 %-------------------------------------------------------------------------
-
-%Impede de remover se tiver vacinas
+%Invariante conhecimento negativo utente
+%Não é possivel remover utente que ja tenha vacinações
 -utente(ID,_,_,_,_,_,_,_,_,_,_,_) ::
                             (solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,_)),L),
                              comprimento(L,N),
                              N == 0).
 %-------------------------------------------------------------------------
+%Invariante conhecimento negativo Centro de Saude
+%Não é possivel remover Centro de Saude que ja tenha um utente associado
 -centro_saude(Centro,_,_,_,_) ::
                             (solucoes(Centro,(utente(_,_,_,_,_,_,_,_,_,_,_,Centro)),L),
                              comprimento(L,N),
                              N == 0).
 
+%Não é possivel remover Centro de Saude que ja tenha stafff associada
 -centro_saude(Centro,_,_,_,_) ::
                             (solucoes(Centro,(staff(_,Centro,_,_)),L),
                              comprimento(L,N),
                              N == 0).
 
 %-------------------------------------------------------------------------
+%Invariante conhecimento negativo Staff
+%Não é possivel remover staff que ja tenha feito vacinacoes
 -staff(Staff,_,_,_) :: (solucoes(Staff,(vacinacao_Covid(Staff,_,_,_,_,_,_)),L),
                         comprimento(L,N),
                        N == 0).
@@ -270,7 +279,6 @@ solucoes(X,Y,Z) :- findall(X,Y,Z).
 
 %-------------------------------------------------------------------------
 % Extensao do meta-predicado nao: Questao -> {V,F}
-
 nao( Questao ) :-
     Questao, !, fail.
 nao( _ ).
@@ -284,12 +292,15 @@ vacinacao1Fase(IDs):-solucoes(ID,(utente(ID,_,_,_,_,Ano,_,_,_,Profissao,Doencas,
                                     (profissoes1Fase(P),pertence(Profissao,P));
                                     (idade(Ano,Idade) ,Idade>=50, doencas1Fase(D),intersetaLista(Doencas,D)))),
                              R),removeRepetidos(R,IDs).
-                            
+
+%Facto que representa todas as profissoes a serem vacindadas na primeira fase.
 profissoes1Fase(['Enfermeiro','Médico','Auxiliar de Saúde','Militar','Polícia']).
+
+%Facto que representa toas as doencas de risco para a primeira fase.
 doencas1Fase(['Insuficiência cardíaca','Doença coronária','Insuficiência renal','Doença respiratória crónica','DPOC']).
 
 %-------------------------------------------------------------------------
-% Identificar os ids das pessoas aptas para a primeira fase da Vacinação
+% Identificar os ids das pessoas aptas para a segunda fase da Vacinação
 % Extensao do predicado vacinacao2Fase : IDs -> {V,F}
 
 vacinacao2Fase(IDs):-solucoes(ID,(utente(ID,_,_,_,_,Ano,_,_,_,_,Doencas,_),(
@@ -298,10 +309,11 @@ vacinacao2Fase(IDs):-solucoes(ID,(utente(ID,_,_,_,_,Ano,_,_,_,_,Doencas,_),(
                                     vacinacao1Fase(V),nao(pertence(ID,V))),
                             R),removeRepetidos(R,IDs).
 
+%Facto que representa toas as doencas de risco para a primeira fase.
 doencas2Fase(['Diabetes','Neoplasia maligna ativa','Doença renal crónica','Insuficiência hepática','Hipertensão arterial','Obesidade']).
 
 %-------------------------------------------------------------------------
-% Identificar os ids das pessoas aptas para a primeira fase da Vacinação
+% Identificar os ids das pessoas aptas para a terceira fase da Vacinação
 % Extensao do predicado vacinacao3Fase : IDs -> {V,F}
 
 vacinacao3Fase(IDs):-solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
@@ -312,7 +324,6 @@ vacinacao3Fase(IDs):-solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
 %-------------------------------------------------------------------------
 % Identificar os ids das pessoas Vacinadas
 % Extensao do predicado vacinadas : IDs -> {V,F}
-
 vacinadas(IDs) :- solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,_)),R),
                             removeRepetidos(R,IDs).
 
@@ -324,16 +335,20 @@ vacinadas(IDs) :- solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,_)),R),
 naoVacinadas(IDs):-solucoes(ID,((utente(ID,_,_,_,_,_,_,_,_,_,_,_)),vacinadas(V),nao(pertence(ID,V))),IDs).
 
 %-------------------------------------------------------------------------
-%Vacinação indevida
-
+% Verificar se data é indevida para certa fase de vacinação
+% Extensao do predicado indevidaFaseX : Dia,Mes,Ano -> {V,F}
 indevidaFase1(_,Mes,Ano):-(Mes < 12,Ano == 2020);(Mes =< 12,Ano < 2020).
 indevidaFase2(Dia,Mes,Ano):-(Mes < 4,Ano == 2021);indevidaFase1(Dia,Mes,Ano).
 indevidaFase3(Dia,Mes,Ano):-(Mes < 9,Ano == 2021);indevidaFase1(Dia,Mes,Ano);indevidaFase2(Dia,Mes,Ano).%Falar no relatorio de metermos que a fase 3 começa em Setembro.
 
+%Verifica qual é a fase de um determinado utente
+% Extensao do predicado faseUtente : ID,Fase -> {V,F}
 faseUtente(ID,Fase):-vacinacao1Fase(V),pertence(ID,V),Fase is 1.
 faseUtente(ID,Fase):-vacinacao2Fase(V),pertence(ID,V),Fase is 2.
 faseUtente(ID,Fase):-vacinacao3Fase(V),pertence(ID,V),Fase is 3.
 
+%Identificar os ids dos utentes que foram vacinados indevidamente
+% Extensao do predicado vacinacaoIndevida : IDs -> {V,F}
 vacinacaoIndevida(IDs):- solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
                                       vacinacao_Covid(_,ID,Dia,Mes,Ano,_,_),
                                       faseUtente(ID,Fase),
@@ -343,49 +358,70 @@ vacinacaoIndevida(IDs):- solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
                                 R),removeRepetidos(R,IDs).
 
 %-------------------------------------------------------------------------
-%Candidatos
-
+%Identificar os ids dos utentes candidatos a uma fase de vacinação
+% Extensao do predicado candidatoVacinacao : Fase,IDs -> {V,F}
 candidatoVacinacao(Fase,IDs):-solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
                                            naoVacinadas(NV),pertence(ID,NV),
                                            faseUtente(ID,F),F =:= Fase),
                                        R),removeRepetidos(R,IDs).
 
 %-------------------------------------------------------------------------
-
+%Identificar os ids dos utentes que tomaram todas as doses
+% Extensao do predicado tomasCompletas : IDs -> {V,F}
 tomasCompletas(IDs):-solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,2)),IDs).
 
+%Identificar os ids dos utentes que não tomaram todas as doses
+% Extensao do predicado vacinacaoIncompleta : IDs -> {V,F}
 vacinacaoIncompleta(IDs):- solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
                                         vacinadas(V),tomasCompletas(T),
                                         pertence(ID,V),nao(pertence(ID,T)))
                                     ,IDs).
 
+%Identificar quantas todas tem um determinado utente
+% Extensao do predicado tomasUtente : ID,Tomas -> {V,F}
 tomasUtente(ID,Tomas):- solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,_)),T),
                         comprimento(T,Tomas).
 
+%Verifica se uma data é depois de outra
+% Extensao do predicado isAter : Dia,Mes,Ano,Dia2,Mes2,Ano2 -> {V,F}
 isAfter(Dia,Mes,Ano,Dia2,Mes2,Ano2):- (Ano > Ano2);(Ano =:= Ano2,Mes > Mes2);(Ano =:= Ano2,Mes =:= Mes2,Dia>Dia2).
 %-------------------------------------------------------------------------
-%Registar
-
+%Registar Vacinacao
+% Extensao do predicado registaVacinacao : Staff,Utente,Dia,Mes,Ano,Vacina,Toma -> {V,F}
 registaVacinacao(Staff,Utente,Dia,Mes,Ano,Vacina,Toma):- evolucao(vacinacao_Covid(Staff,Utente,Dia,Mes,Ano,Vacina,Toma)).
 
+%Registar Utente
+% Extensao do predicado registaUtente : ID,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,[Doencas],CentroSaude -> {V,F}
 registaUtente(ID,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,[Doencas|H],CentroSaude):-evolucao(utente(ID,NSS,Nome,Dia,Mes,Ano,Email,Tel,Morada,Profissao,[Doencas|H],CentroSaude)).
 
+%Registar Staff
+% Extensao do predicado registaStaff : Staff,Centro,Nome,Email -> {V,F}
 registaStaff(Staff,Centro,Nome,Email):-evolucao(staff(Staff,Centro,Nome,Email)).
 
+%Registar Centro
+% Extensao do predicado registaCentro : Centro,Nome,Morada,Telefone,Email -> {V,F}
 registaCentro(Centro,Nome,Morada,Telefone,Email):-evolucao(centro_saude(Centro,Nome,Morada,Telefone,Email)).
 
 %-------------------------------------------------------------------------
-%Remover
-
+%Remover utente
+% Extensao do predicado removerUtente : ID -> {V,F}
 removerUtente(ID):-involucao(utente(ID,_,_,_,_,_,_,_,_,_,_,_)).
 
+%Remover Staff
+% Extensao do predicado removerStaff : Staff -> {V,F}
 removerStaff(Staff):-involucao(staff(Staff,_,_,_)).
 
+%Remover Centro
+% Extensao do predicado removerCentro : Centro -> {V,F}
 removerCentro(Centro):-involucao(centro_saude(Centro,_,_,_,_)).
 
+%Remover lista de vacinas
+% Extensao do predicado removerVacinas : [Ids] -> {V,F}
 removerVacinas([]).
 removerVacinas([H|T]):-involucao(vacinacao_Covid(_,H,_,_,_,_,_)),removerVacinas(T).
 
+%Remover utente e todas as suas vacinas
+% Extensao do predicado forceRemoverUtente : ID -> {V,F}
 forceRemoverUtente(ID):-(solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,_)),R)),
                             removerVacinas(R),removerUtente(ID).
 %-------------------------------------------------------------------------
@@ -394,38 +430,50 @@ inferencia(Questao,false):- not(Questao).
 inferencia(Questao,true):- Questao.
 
 %-------------------------------------------------------------------------
-%EXTRA
 %Identificar Staff que não vacinou ninguem.
+% Extensao do predicado staffSemVacinacao : IDs -> {V,F}
 staffSemVacinacao(IDs):-solucoes(ID,(staff(ID,_,_,_),
                                     staffComVacinacao(R),nao(pertence(ID,R)))
                                     ,IDs).
 
 %Identificar Staff que vacinou alguem.
+% Extensao do predicado staffComVacinacao : IDs -> {V,F}
 staffComVacinacao(IDs):-solucoes(ID,(vacinacao_Covid(ID,_,_,_,_,_,_)),R),removeRepetidos(R,IDs).
 
-%Staff que vacinou um utente
+%Identificar Staff que vacinou um determinado utente
+% Extensao do predicado staffDeUtente : Utente,IDs -> {V,F}
 staffDeUtente(Utente,IDs):-solucoes((ID,Nome),(vacinacao_Covid(ID,Utente,_,_,_,_,_),staff(ID,_,Nome,_)),IDs).
 
-%Staff que pertence a centro.
+%Identificar Staff que pertence a centro.
+% Extensao do predicado staffDeCentro : Utente,IDs -> {V,F}
 staffDeCentro(Centro,IDs):-solucoes((ID,Nome),(staff(ID,Centro,Nome,_)),IDs).
 
+%Determina quantas ocorrencias ha de uma vacina numa lista
+% Extensao do predicado ocorrenciasVacina : Vacina,Lista,Ocorrencias -> {V,F}
 ocorrenciasVacina(_,[],0).
 ocorrenciasVacina(X,[X|T],Y):- ocorrenciasVacina(X,T,Z),Y is Z+1.
 ocorrenciasVacina(X,[_|T],Z):- ocorrenciasVacina(X,T,Z).
 
+
+%Transforma uma lista de vacinas numa lista de tuplos
+% Extensao do predicado vacinasToTupleList : ListaVacinas,Lista,ListaDeTuplos -> {V,F}
 vacinasToTupleList([],_,_).
 vacinasToTupleList([H],V,[(H,R)]):-ocorrenciasVacina(H,V,R).
 vacinasToTupleList([H|T],V,[(H,R)|L]):-ocorrenciasVacina(H,V,R),vacinasToTupleList(T,V,L).
 
 %Lista todas as vacinas dadas num centro e a quantidade
+% Extensao do predicado vacinasPorCentro : Centro,Vacinas -> {V,F}
 vacinasPorCentro(Centro,Vacinas):- (solucoes(Vacina,(vacinacao_Covid(Staff,_,_,_,_,Vacina,_),
                                              staff(Staff,Centro,_,_)),R),
                                     removeRepetidos(R,L),vacinasToTupleList(L,R,Vacinas)).
 
-
-
+%Determina o numero de vacinas dadas por um staff
+% Extensao do predicado numeroVacinasPorStaff : Centro,Vacinas -> {V,F}
 numeroVacinasPorStaff(Staff,R) :- solucoes((Staff),vacinacao_Covid(Staff,_,_,_,_,_,_),L),comprimento(L,R).
 
+
+%Lista todas as vacinas dadas por uma staff e a quantidade
+% Extensao do predicado vacinasPorStaff : Centro,Vacinas -> {V,F}
 vacinasPorStaff(Staff,Vacinas):- (solucoes(Vacina,(vacinacao_Covid(Staff,_,_,_,_,Vacina,_)),R),
                                     removeRepetidos(R,L),vacinasToTupleList(L,R,Vacinas)).
 
@@ -434,30 +482,39 @@ maiorTuplo( (Z,X), (_,Y), (Z,X) ) :-
 maiorTuplo( (_,X),(W,Y),(W,Y) ) :-
     X =< Y.
 
-
 maiorTuploLista( [X],X ).
 maiorTuploLista( [X|Y],N ) :-
     maiorTuploLista( Y,Z ),
         maiorTuplo( X,Z,N ).
 
-%Staff que vacinou mais
+%Determina o Staff que vacinou mais
+% Extensao do predicado staffMaisVacinas : (Staff,Quantidade)-> {V,F}
 staffMaisVacinas(R) :- solucoes((Staff,N),(staff(Staff,_,_,_), 
-					   vacinasPorStaff(Staff,N)), X),
+					   numeroVacinasPorStaff(Staff,N)), X),
 					   maiorTuploLista(X,R).
 
-
+%Determina o numero de vacinas dadas por unum Centro
+% Extensao do predicado numeroVacinasPorCentro : Centro,Vacinas -> {V,F}
 numeroVacinasPorCentro(Centro,R) :- solucoes((Vacina),(staff(Staff,Centro,_,_),
 					        vacinacao_Covid(Staff,_,_,_,_,Vacina,_)),L),
 					        comprimento(L,R).
 
+%Determina o Centro onde se vacinou mais
+% Extensao do predicado centroMaisVacinas : (Centro,Quantidade)-> {V,F}
 centroMaisVacinas(R) :- solucoes((Centro,N),(centro_saude(Centro,_,_,_,_), 
 					     numeroVacinasPorCentro(Centro,N)), X),
 					     maiorTuploLista(X,R).
 
+%Determina o numero de utentes num determinado Centro
+% Extensao do predicado numeroUtentesCentro : Centro,Quantidade-> {V,F}
 numeroUtentesCentro(Centro,R) :- solucoes(ID,utente(ID,_,_,_,_,_,_,_,_,_,_,Centro),X),comprimento(X,R).
 
+%Determina os utentes num determinado Centro
+% Extensao do predicado utentesCentro : [(Id,Nome)]-> {V,F}
 utentesCentro(Centro,R) :- solucoes((ID,Nome),utente(ID,_,Nome,_,_,_,_,_,_,_,_,Centro),R).
 
+%Identifica as staff que fizerem vacinacao indevida
+% Extensao do predicado vacinacaoIndevidaStaff : Ids-> {V,F}
 vacinacaoIndevidaStaff(IDs):- solucoes(Staff,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
 					      vacinacao_Covid(Staff,ID,Dia,Mes,Ano,_,_),
                                       	      faseUtente(ID,Fase),
@@ -466,7 +523,8 @@ vacinacaoIndevidaStaff(IDs):- solucoes(Staff,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
                                               (Fase == 3,indevidaFase3(Dia,Mes,Ano)))),
                                       R),removeRepetidos(R,IDs).
 
-
+%Identifica os centros onde se fizer vacinacao indevida
+% Extensao do predicado vacinacaoIndevidaCentro : Ids-> {V,F}
 vacinacaoIndevidaCentro(IDs):- solucoes(Centro,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),						
 					        vacinacao_Covid(Staff,ID,Dia,Mes,Ano,_,_),
                                                 staff(Staff,Centro,_,_),
