@@ -385,7 +385,7 @@ forceRemoverUtente(ID):-(solucoes(ID,(vacinacao_Covid(_,ID,_,_,_,_,_)),R)),
                             removerVacinas(R),removerUtente(ID).
 %-------------------------------------------------------------------------
 
-inferencia(Questao,false):- -Questao.
+inferencia(Questao,false):- not(Questao).
 inferencia(Questao,true):- Questao.
 
 %-------------------------------------------------------------------------
