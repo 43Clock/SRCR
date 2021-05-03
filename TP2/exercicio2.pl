@@ -32,24 +32,24 @@ utente(3,'528-76-5212','Alex Cavalcanti',6,2,1969,'alexFernandescavalcanti@gmail
 utente(4,'041-09-7675','Dominique Castelo Regueira',5,9,1965,'dominiquecasteloregueira@gmail.com',969248520,'Lisboa','Militar',[],6).
 utente(5,'525-89-6485','Éder Vigário Sacramento',10,7,1970,'edervigáriosacramento@gmail.com',961969458,'Bragança','Talhante',['Doença renal crónica'],5).
 utente(6,'478-80-8396','Marília Castanho Dutra',16,1,1950,'maríliacastanhodutra@gmail.com',947429573,'Viseu','Advogado',['Doença respiratória crónica'],8).
-utente(7,'237-61-0624','Dário Franca Costa da Costa',27,2,1987,'dariofrancacostadacosta@gmail.com',9619584846,'Santarem','Médico',[],4).
-utente(8,'487-56-6857','Benjamin Tavares Sales',3,12,2008,'benjamintavaressales@gmail.com',9887808934,'Porto','Estudante',['Asma'],3).
-utente(9,'501-19-9485','Marcelo Franqueira Portela',29,3,1972,'marcelofranqueiraportela@gmail.com',253796185,'Braga','Enfermeiro',['Diabetes'],1).
-utente(10,'247-63-4919','Lúcia Domingues Barros',17,4,1979,'luciadominguesbarros@gmail.com',938582447,'Aveiro','Arquiteta',['Insuficiência cardíaca'],2).
-utente(11,'387-05-0763','Marcelino Zarco Aveiro',3,11,1929,'marcelinozarcoaveiro@gmail.com',965772946,'Évora','Vendedor',[],7).
-utente(12,'135-52-2652','Diana Coimbra Barreira',14,12,1978,'dianacoimbrabarreira@gmail.com',968888619,'Lisboa','Barbeiro',[],6).
-utente(13,'247-17-6120','Manuel Lourenço Garcia Faria Machado',20,1,1953,'manuelmachado@gmail.com',936885900,'Santarém','Pasteleiro',['Obesidade'],4).
-utente(14,'303-11-9515','Eduarda Cruz Pires',18,7,1965,'eduardres@gmail.com',927118463,'Bragança','Segurança',['Neoplasia maligna ativa'],5).
+utente(7,'237-61-0624','Dário Franca Costa da Costa',27,2,1987,'dariofrancacostadacosta@gmail.com',9619584846,'Santarem',p_desconhecida,[],4).
+utente(8,nss_desconhecido,'Benjamin Tavares Sales',3,12,2008,'benjamintavaressales@gmail.com',9887808934,'Porto','Estudante',['Asma'],3).
+utente(9,'501-19-9485','Marcelo Franqueira Portela',dia_desconhecido,mes_desconhecido,ano_desconhecido,'marcelofranqueiraportela@gmail.com',253796185,'Braga','Enfermeiro',['Diabetes'],1).
+utente(10,'247-63-4919',nome_desconhecido,17,4,1979,'luciadominguesbarros@gmail.com',938582447,'Aveiro','Arquiteta',['Insuficiência cardíaca'],2).
+utente(11,'387-05-0763','Marcelino Zarco Aveiro',3,11,1929,email_desconhecido,965772946,'Évora','Vendedor',[],7).
+utente(12,'135-52-2652','Diana Coimbra Barreira',14,12,1978,'dianacoimbrabarreira@gmail.com',tele_desconhecido,'Lisboa','Barbeiro',[],6).
+utente(13,'247-17-6120','Manuel Lourenço Garcia Faria Machado',20,1,1953,'manuelmachado@gmail.com',936885900,cidade_desconhecida,'Pasteleiro',['Obesidade'],4).
+utente(14,'303-11-9515','Eduarda Cruz Pires',18,7,1965,'eduardres@gmail.com',927118463,'Bragança','Segurança',doencas_desconhecidas,5).
 
 
-centro_saude(1,'Amorosa','Braga',253465372,'amorosa@gmail.com').
+centro_saude(1,'Amorosa','Guimaraes',253465372,'amorosa@gmail.com').
 centro_saude(2,'AveiroSaúde','Aveiro',283465372,'aveirosaude@gmail.com').
 centro_saude(3,'PortoSaúde','Porto',255465372,'portosaude@gmail.com').
 centro_saude(4,'SantarémClínica','Santarém',243794853,'santaremclinica@gmail.com').
-centro_saude(5,'BragançaClínica','Bragança',273888601,'bragancaclinica@gmail.com').
-centro_saude(6,'LisboaComSaúde','Lisboa',219755729,'lisboacomsaude@gmail.com').
-centro_saude(7,'ÉvoraMelhor','Évora',266926492,'evoramelhor@gmail.com').
-centro_saude(8,'ViseuSaúde','Viseu',232702759,'viseusaude@gmail.com').
+centro_saude(5,nome_desconhecido,'Bragança',273888601,'bragancaclinica@gmail.com').
+centro_saude(6,'LisboaComSaúde',cidade_desconhecida,219755729,'lisboacomsaude@gmail.com').
+centro_saude(7,'ÉvoraMelhor','Évora',tele_desconhecido,'evoramelhor@gmail.com').
+centro_saude(8,'ViseuSaúde','Viseu',232702759,email_desconhecido).
 
 staff(1,1,'Tomás Rocha','tomasrocha@gmail.com').
 staff(2,2,'João Barbosa','joaobarbosa@gmail.com').
@@ -59,8 +59,8 @@ staff(5,5,'Fábia Pescada','fabiavilarinho@gmail.com').
 staff(6,6,'Diogo Mourinho','diogomourinho@gmail.com').
 staff(7,7,'Salomé Sabrosa','salomesabrosa@gmail.com').
 staff(8,8,'Duarte Mourão','duartemourao@gmail.com').
-staff(9,4,'Cândida Castanheira','candidacastanheira@gmail.com').
-staff(10,7,'Adalberto Dias','adalbertodias@gmail.com').
+staff(9,4,nome_desconhecido,'candidacastanheira@gmail.com').
+staff(10,7,'Adalberto Dias',email_desconhecido).
 
 vacinacao_Covid(1,1,21,2,2021,'AstraZeneca',1).
 vacinacao_Covid(3,3,28,3,2021,'Pfizer',1).
@@ -69,11 +69,11 @@ vacinacao_Covid(6,4,22,2,2021,'Pfizer',1).
 vacinacao_Covid(6,4,1,3,2021,'Pfizer',2).
 vacinacao_Covid(5,5,12,5,2021,'Moderna',1).
 vacinacao_Covid(5,5,20,5,2021,'Moderna',2).
-vacinacao_Covid(2,10,2,5,2021,'AstraZeneca',1).
-vacinacao_Covid(9,13,10,6,2021,'Moderna',1).
-vacinacao_Covid(4,13,17,6,2021,'Moderna',2).
-vacinacao_Covid(5,14,2,6,2021,'AstraZeneca',1).
-vacinacao_Covid(5,14,10,6,2021,'AstraZeneca',2).
+vacinacao_Covid(2,10,dia_desconhecido,5,2021,'AstraZeneca',1).
+vacinacao_Covid(9,13,10,mes_desconhecido,2021,'Moderna',1).
+vacinacao_Covid(4,13,17,6,ano_desconhecido,'Moderna',2).
+vacinacao_Covid(5,14,dia_desconhecido,mes_desconhecido,ano_desconhecido,'AstraZeneca',1).
+vacinacao_Covid(5,14,10,6,2021,vacina_desconhecida,2).
 
 %-------------------------------------------------------------------------
 
@@ -677,8 +677,9 @@ excecao(staff(13,6,'Alexandre Costa','alexandrecosta2@gmail.com')).
 
 % Uma vacinação pode ter ocorrido em dois dias diferentes (dia 10 e dia 15 por exemplo)
 
-vacinacao_Covid(5,16,Dia,10,2021,'AstraZeneca',1) :- Dia =< 15, Dia >= 10.
-excecao(vacinacao_Covid(5,16,Dia,10,2021,'AstraZeneca',1)) :- Dia =< 15, Dia >= 10.
+vacinacao_Covid(5,16,{10,15},10,2021,'AstraZeneca',1).
+excecao(vacinacao_Covid(5,16,10,10,2021,'AstraZeneca',1)).
+excecao(vacinacao_Covid(5,16,15,10,2021,'AstraZeneca',1)).
 
 
 
@@ -759,9 +760,6 @@ excecao(vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,Vacina,Toma)) :- vacinacao_
 
 % Vacina desconhecida
 excecao(vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,Vacina,Toma)) :- vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,vacina_desconhecida,Toma).
-
-% Toma desconhecida
-excecao(vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,Vacina,Toma)) :- vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,Vacina,toma_desconhecida).
 
 % Data desconhecida
 excecao(vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,Vacina,Toma)) :- vacinacao_Covid(IDStaff,IDUtente,dia_desconhecido,mes_desconhecido,ano_desconhecido,Vacina,Toma).
