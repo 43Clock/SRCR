@@ -1,4 +1,4 @@
-% Sistemas de Representação de Conhecimento e Raciocínio - Exercício 1
+% Sistemas de Representação de Conhecimento e Raciocínio - Exercício 2
 % Grupo 43
 
 % Alexandra Dias Candeis
