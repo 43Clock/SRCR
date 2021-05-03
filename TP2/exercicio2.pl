@@ -12,6 +12,14 @@
 
 :- set_prolog_flag( discontiguous_warnings,off ).
 :- set_prolog_flag( single_var_warnings,off ).
+:- discontiguous excecao/1.
+:- discontiguous vacinacao_Covid/7.
+:- discontiguous staff/4.
+:- discontiguous centro_saude/5.
+:- discontiguous utente/12.
+:- discontiguous (::)/2.
+:- discontiguous (-)/1.
+:- discontiguous nulo/1.
 
 %--------------------------------------------------------------------------------------------
 % Definição de invariante
@@ -313,7 +321,7 @@ doencas1Fase(['Insuficiência cardíaca','Doença coronária','Insuficiência re
 % Extensao do predicado vacinacao2Fase : IDs -> {V,F}
 
 vacinacao2Fase(IDs):-solucoes(ID,(utente(ID,_,_,_,_,Ano,_,_,_,_,Doencas,_),
-                                    (nao(excecao(utente(ID,_,_,_,_,Ano,_,_,_,Profissao,Doencas,_)))),
+                                    (nao(excecao(utente(ID,_,_,_,_,Ano,_,_,_,_,Doencas,_)))),
                                     ((idade(Ano,Idade) ,Idade>=65);
                                     (idade(Ano,Idade) ,Idade>=50,Idade=<64, doencas2Fase(D),intersetaLista(Doencas,D))),
                                     vacinacao1Fase(V),nao(pertence(ID,V))),
@@ -605,7 +613,7 @@ vacinacao_Covid(2,15,17,10,2020,vacina_desconhecida,1).
 % Utente com Número de Segurança Social interdito
 
 utente(16,nss_interdito,'Rodrigo Perez',19,11,1968,'perezrodrigogmail.com',973465124,'Évora','Juiz',['Escorbuto','Lepra'],7).
-excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,nss_interdito,N,Dia,Mes,A,E,T,M,P,D,IDCentro).
+excecao(utente(ID,_,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,nss_interdito,N,Dia,Mes,A,E,T,M,P,D,IDCentro).
 nulo(nss_interdito).
 +utente(16,nss_interdito,'Rodrigo Perez',19,11,1968,'perezrodrigogmail.com',973465124,'Évora','Juiz',['Escorbuto','Lepra'],7) :: 
                             (solucoes(NSS, (utente(21,NSS,'Rodrigo Perez',19,11,1968,'perezrodrigogmail.com',973465124,'Évora','Juiz',['Escorbuto','Lepra'],7),
@@ -616,7 +624,7 @@ nulo(nss_interdito).
 % Utente com data de nascimento interdita
 
 utente(17,'768-43-1609','Paulo Jorge',dia_interdito,mes_interdito,ano_interdito,'paulojorge@gmail.com',983143776,'Lisboa','Taxista',[],6).
-excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,dia_interdito,mes_interdito,ano_interdito,E,T,M,P,D,IDCentro).
+excecao(utente(ID,NSS,N,_,_,_,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,dia_interdito,mes_interdito,ano_interdito,E,T,M,P,D,IDCentro).
 nulo(dia_interdito).
 nulo(mes_interdito).
 nulo(ano_interdito).
@@ -629,7 +637,7 @@ nulo(ano_interdito).
 % Staff com email interdito
 
 staff(12,7,'Pedro Pereira',email_interdito).
-excecao(staff(ID,IDCentro,N,Email)) :- staff(ID,IDCentro,N,email_interdito).
+excecao(staff(ID,IDCentro,N,_)) :- staff(ID,IDCentro,N,email_interdito).
 nulo(email_interdito).
 +staff(12,7,'Pedro Pereira',email_interdito) :: 
                             (solucoes(Email, (staff(12,7,'Pedro Pereira',Email),
@@ -640,7 +648,7 @@ nulo(email_interdito).
 %Vacinação com data interdita
 
 vacinacao_Covid(4,17,dia_interdito,mes_interdito,ano_interdito,'AstraZeneca',1).
-excecao(vacinacao_Covid(IDStaff,IDUtente,D,M,A,V,T)) :- vacinacao_Covid(IDStaff,IDUtente,dia_interdito,mes_interdito,ano_interdito,V,T).
+excecao(vacinacao_Covid(IDStaff,IDUtente,_,_,_,V,T)) :- vacinacao_Covid(IDStaff,IDUtente,dia_interdito,mes_interdito,ano_interdito,V,T).
 +vacinacao_Covid(4,17,dia_interdito,mes_interdito,ano_interdito,'AstraZeneca',1) ::
                             (solucoes((Dia,Mes,Ano), (vacinacao_Covid(4,17,Dia,Mes,Ano,'AstraZeneca',1),
                             nao(nulo(Dia)),nao(nulo(Mes)),nao(nulo(Ano))),S),
@@ -690,76 +698,76 @@ excecao(vacinacao_Covid(5,16,15,10,2021,'AstraZeneca',1)).
 % --------------Utentes--------------------
 
 % Numero de Segurança Social desconhecido
-excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,nss_desconhecido,N,Dia,Mes,A,E,T,M,P,D,IDCentro).
+excecao(utente(ID,_,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,nss_desconhecido,N,Dia,Mes,A,E,T,M,P,D,IDCentro).
 
 % Nome desconhecido
-excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,nome_desconhecido,Dia,Mes,A,E,T,M,P,D,IDCentro).
+excecao(utente(ID,NSS,_,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,nome_desconhecido,Dia,Mes,A,E,T,M,P,D,IDCentro).
 
 % Dia da Data de nascimento desconhecido
-excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,dia_desconhecido,Mes,A,E,T,M,P,D,IDCentro).
+excecao(utente(ID,NSS,N,_,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,dia_desconhecido,Mes,A,E,T,M,P,D,IDCentro).
 
 % Mês da Data de nascimento desconhecido
-excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,Dia,mes_desconhecido,A,E,T,M,P,D,IDCentro).
+excecao(utente(ID,NSS,N,Dia,_,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,Dia,mes_desconhecido,A,E,T,M,P,D,IDCentro).
 
 % Ano da Data de nascimento desconhecido
-excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,Dia,Mes,ano_desconhecido,E,T,M,P,D,IDCentro).
+excecao(utente(ID,NSS,N,Dia,Mes,_,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,Dia,Mes,ano_desconhecido,E,T,M,P,D,IDCentro).
 
 % Email desconhecido
-excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,Dia,Mes,A,email_desconhecido,T,M,P,D,IDCentro).
+excecao(utente(ID,NSS,N,Dia,Mes,A,_,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,Dia,Mes,A,email_desconhecido,T,M,P,D,IDCentro).
 
 % Telemovel desconhecido
-excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,Dia,Mes,A,E,tele_desconhecido,M,P,D,IDCentro).
+excecao(utente(ID,NSS,N,Dia,Mes,A,E,_,M,P,D,IDCentro)) :- utente(ID,NSS,N,Dia,Mes,A,E,tele_desconhecido,M,P,D,IDCentro).
 
 % Morada desconhecida
-excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,Dia,Mes,A,E,T,morada_desconhecida,P,D,IDCentro).
+excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,_,P,D,IDCentro)) :- utente(ID,NSS,N,Dia,Mes,A,E,T,morada_desconhecida,P,D,IDCentro).
 
 % Profissão desconhecida
-excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,Dia,Mes,A,E,T,M,p_desconhecida,D,IDCentro).
+excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,_,D,IDCentro)) :- utente(ID,NSS,N,Dia,Mes,A,E,T,M,p_desconhecida,D,IDCentro).
 
 % Doenças desconhecidas
-excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,doencas_desconhecidas,IDCentro).
+excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,_,IDCentro)) :- utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,doencas_desconhecidas,IDCentro).
 
 % Data de nascimento desconhecida
-excecao(utente(ID,NSS,N,Dia,Mes,A,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,dia_desconhecido,mes_desconhecido,ano_desconhecido,E,T,M,P,D,IDCentro).
+excecao(utente(ID,NSS,N,_,_,_,E,T,M,P,D,IDCentro)) :- utente(ID,NSS,N,dia_desconhecido,mes_desconhecido,ano_desconhecido,E,T,M,P,D,IDCentro).
 
 
 % --------------Centro de Saúde---------------
 
 % Nome desconhecido
-excecao(centro_saude(ID,Nome,Morada,Telefone,Email)) :- centro_saude(ID,nome_desconhecido,Morada,Telefone,Email).
+excecao(centro_saude(ID,_,Morada,Telefone,Email)) :- centro_saude(ID,nome_desconhecido,Morada,Telefone,Email).
 
 % Morada desconhecida
-excecao(centro_saude(ID,Nome,Morada,Telefone,Email)) :- centro_saude(ID,Nome,morada_desconhecida,Telefone,Email).
+excecao(centro_saude(ID,Nome,_,Telefone,Email)) :- centro_saude(ID,Nome,morada_desconhecida,Telefone,Email).
 
 % Telefone desconhecido
-excecao(centro_saude(ID,Nome,Morada,Telefone,Email)) :- centro_saude(ID,Nome,Morada,tele_desconhecido,Email).
+excecao(centro_saude(ID,Nome,Morada,_,Email)) :- centro_saude(ID,Nome,Morada,tele_desconhecido,Email).
 
 % Email desconhecido
-excecao(centro_saude(ID,Nome,Morada,Telefone,Email)) :- centro_saude(ID,Nome,Morada,Telefone,email_desconhecido).
+excecao(centro_saude(ID,Nome,Morada,Telefone,_)) :- centro_saude(ID,Nome,Morada,Telefone,email_desconhecido).
 
 
 % ------------------Staff--------------------
 
 % Nome desconhecido
-excecao(staff(ID,IDCentro,Nome,Email)) :- staff(ID,IDCentro,nome_desconhecido,Email).
+excecao(staff(ID,IDCentro,_,Email)) :- staff(ID,IDCentro,nome_desconhecido,Email).
 
 % Email desconhecido
-excecao(staff(ID,IDCentro,Nome,Email)) :- staff(ID,IDCentro,Nome,email_desconhecido).
+excecao(staff(ID,IDCentro,Nome,_)) :- staff(ID,IDCentro,Nome,email_desconhecido).
 
 
 % ----------------Vacinação Covid-------------
 
 % Dia desconhecido
-excecao(vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,Vacina,Toma)) :- vacinacao_Covid(IDStaff,IDUtente,dia_desconhecido,Mes,Ano,Vacina,Toma).
+excecao(vacinacao_Covid(IDStaff,IDUtente,_,Mes,Ano,Vacina,Toma)) :- vacinacao_Covid(IDStaff,IDUtente,dia_desconhecido,Mes,Ano,Vacina,Toma).
 
 % Mês desconhecido
-excecao(vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,Vacina,Toma)) :- vacinacao_Covid(IDStaff,IDUtente,Dia,mes_desconhecido,Ano,Vacina,Toma).
+excecao(vacinacao_Covid(IDStaff,IDUtente,Dia,_,Ano,Vacina,Toma)) :- vacinacao_Covid(IDStaff,IDUtente,Dia,mes_desconhecido,Ano,Vacina,Toma).
 
 % Ano desconhecido
-excecao(vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,Vacina,Toma)) :- vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,ano_desconhecido,Vacina,Toma).
+excecao(vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,_,Vacina,Toma)) :- vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,ano_desconhecido,Vacina,Toma).
 
 % Vacina desconhecida
-excecao(vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,Vacina,Toma)) :- vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,vacina_desconhecida,Toma).
+excecao(vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,_,Toma)) :- vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,vacina_desconhecida,Toma).
 
 % Data desconhecida
-excecao(vacinacao_Covid(IDStaff,IDUtente,Dia,Mes,Ano,Vacina,Toma)) :- vacinacao_Covid(IDStaff,IDUtente,dia_desconhecido,mes_desconhecido,ano_desconhecido,Vacina,Toma).
+excecao(vacinacao_Covid(IDStaff,IDUtente,_,_,_,Vacina,Toma)) :- vacinacao_Covid(IDStaff,IDUtente,dia_desconhecido,mes_desconhecido,ano_desconhecido,Vacina,Toma).
