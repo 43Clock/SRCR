@@ -304,10 +304,14 @@ nao( _ ).
 % Extensao do predicado vacinacao1Fase : IDs -> {V,F}
 
 vacinacao1Fase(IDs):-solucoes(ID,(utente(ID,_,_,_,_,Ano,_,_,_,Profissao,Doencas,_),
-                                    (nao(excecao(utente(ID,_,_,_,_,Ano,_,_,_,Profissao,Doencas,_)))),
-                                    ((idade(Ano,Idade) ,Idade>=80);
-                                    (profissoes1Fase(P),pertence(Profissao,P));
-                                    (idade(Ano,Idade) ,Idade>=50, doencas1Fase(D),intersetaLista(Doencas,D)))),
+                                    ((nao(excecao(utente(ID,_,_,_,_,ano_desconhecido,_,_,_,Profissao,Doencas,_))), 
+                                      nao(excecao(utente(ID,_,_,_,_,ano_interdito,_,_,_,Profissao,Doencas,_)))),(idade(Ano,Idade) ,Idade>=80);
+                                    (nao(excecao(utente(ID,_,_,_,_,Ano,_,_,_,p_desconhecida,Doencas,_))),profissoes1Fase(P),pertence(Profissao,P));
+                                    ((nao(excecao(utente(ID,_,_,_,_,ano_desconhecido,_,_,_,Profissao,Doencas,_))), 
+                                      nao(excecao(utente(ID,_,_,_,_,ano_interdito,_,_,_,Profissao,Doencas,_))),
+                                      nao(excecao(utente(ID,_,_,_,_,Ano,_,_,_,Profissao,doencas_desconhecidas,_)))
+                                      ),
+                                    idade(Ano,Idade) ,Idade>=50, doencas1Fase(D),intersetaLista(Doencas,D)))),
                              R),removeRepetidos(R,IDs).
 
 %Facto que representa todas as profissoes a serem vacindadas na primeira fase.
@@ -321,9 +325,12 @@ doencas1Fase(['Insuficiência cardíaca','Doença coronária','Insuficiência re
 % Extensao do predicado vacinacao2Fase : IDs -> {V,F}
 
 vacinacao2Fase(IDs):-solucoes(ID,(utente(ID,_,_,_,_,Ano,_,_,_,_,Doencas,_),
-                                    (nao(excecao(utente(ID,_,_,_,_,Ano,_,_,_,_,Doencas,_)))),
+                                    (nao(excecao(utente(ID,_,_,_,_,ano_desconhecido,_,_,_,Profissao,Doencas,_))), 
+                                     nao(excecao(utente(ID,_,_,_,_,ano_interdito,_,_,_,Profissao,Doencas,_)))),
                                     ((idade(Ano,Idade) ,Idade>=65);
-                                    (idade(Ano,Idade) ,Idade>=50,Idade=<64, doencas2Fase(D),intersetaLista(Doencas,D))),
+                                    (idade(Ano,Idade) ,Idade>=50,Idade=<64,
+                                    nao(excecao(utente(ID,_,_,_,_,Ano,_,_,_,Profissao,doencas_desconhecidas,_))),
+                                     doencas2Fase(D),intersetaLista(Doencas,D))),
                                     vacinacao1Fase(V),nao(pertence(ID,V))),
                             R),removeRepetidos(R,IDs).
 
@@ -368,9 +375,12 @@ faseUtente(ID,Fase):-vacinacao3Fase(V),pertence(ID,V),Fase is 3.
 %Identificar os ids dos utentes que foram vacinados indevidamente
 % Extensao do predicado vacinacaoIndevida : IDs -> {V,F}
 vacinacaoIndevida(IDs):- solucoes(ID,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
-                                      (nao(excecao(utente(ID,_,_,_,_,_,_,_,_,_,_,_)))),
                                       vacinacao_Covid(_,ID,Dia,Mes,Ano,_,_),
-                                      (nao(excecao(vacinacao_Covid(_,ID,Dia,Mes,Ano,_,_)))),
+                                      (nao(excecao(vacinacao_Covid(_,ID,dia_interdito,mes_interdito,ano_interdito,_,_)))),
+                                      (nao(excecao(vacinacao_Covid(_,ID,dia_desconhecido,Mes,Ano,_,_)))),
+                                      (nao(excecao(vacinacao_Covid(_,ID,Dia,mes_desconhecido,Ano,_,_)))),
+                                      (nao(excecao(vacinacao_Covid(_,ID,Dia,Mes,ano_desconhecido,_,_)))),
+                                      (nao(excecao(vacinacao_Covid(_,ID,dia_desconhecido,mes_desconhecido,ano_desconhecido,_,_)))),
                                       faseUtente(ID,Fase),
                                       ((Fase == 1,indevidaFase1(Dia,Mes,Ano));
                                        (Fase == 2,indevidaFase2(Dia,Mes,Ano));
@@ -536,9 +546,12 @@ utentesCentro(Centro,R) :- solucoes((ID,Nome),utente(ID,_,Nome,_,_,_,_,_,_,_,_,C
 %Identifica as staff que fizerem vacinacao indevida
 % Extensao do predicado vacinacaoIndevidaStaff : Ids-> {V,F}
 vacinacaoIndevidaStaff(IDs):- solucoes(Staff,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
-                                              nao(excecao(utente(ID,_,_,_,_,_,_,_,_,_,_,_))),
-					                          vacinacao_Covid(Staff,ID,Dia,Mes,Ano,_,_),
-                                              nao(excecao(vacinacao_Covid(Staff,ID,Dia,Mes,Ano,_,_))),
+                                              vacinacao_Covid(Staff,ID,Dia,Mes,Ano,_,_),
+                                              (nao(excecao(vacinacao_Covid(Staff,ID,dia_interdito,mes_interdito,ano_interdito,_,_)))),
+                                              (nao(excecao(vacinacao_Covid(Staff,ID,dia_desconhecido,Mes,Ano,_,_)))),
+                                              (nao(excecao(vacinacao_Covid(Staff,ID,Dia,mes_desconhecido,Ano,_,_)))),
+                                              (nao(excecao(vacinacao_Covid(Staff,ID,Dia,Mes,ano_desconhecido,_,_)))),
+                                              (nao(excecao(vacinacao_Covid(Staff,ID,dia_desconhecido,mes_desconhecido,ano_desconhecido,_,_)))),
                                       	      faseUtente(ID,Fase),
                                       	      ((Fase == 1,indevidaFase1(Dia,Mes,Ano));
                                               (Fase == 2,indevidaFase2(Dia,Mes,Ano));
@@ -548,9 +561,12 @@ vacinacaoIndevidaStaff(IDs):- solucoes(Staff,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
 %Identifica os centros onde se fizer vacinacao indevida
 % Extensao do predicado vacinacaoIndevidaCentro : Ids-> {V,F}
 vacinacaoIndevidaCentro(IDs):- solucoes(Centro,(utente(ID,_,_,_,_,_,_,_,_,_,_,_),
-                                                nao(excecao(utente(ID,_,_,_,_,_,_,_,_,_,_,_))),						
-					                            vacinacao_Covid(Staff,ID,Dia,Mes,Ano,_,_),
-                                                nao(excecao(vacinacao_Covid(Staff,ID,Dia,Mes,Ano,_,_))),
+                                                vacinacao_Covid(Staff,ID,Dia,Mes,Ano,_,_),
+                                                (nao(excecao(vacinacao_Covid(Staff,ID,dia_interdito,mes_interdito,ano_interdito,_,_)))),
+                                                (nao(excecao(vacinacao_Covid(Staff,ID,dia_desconhecido,Mes,Ano,_,_)))),
+                                                (nao(excecao(vacinacao_Covid(Staff,ID,Dia,mes_desconhecido,Ano,_,_)))),
+                                                (nao(excecao(vacinacao_Covid(Staff,ID,Dia,Mes,ano_desconhecido,_,_)))),
+                                                (nao(excecao(vacinacao_Covid(Staff,ID,dia_desconhecido,mes_desconhecido,ano_desconhecido,_,_)))),
                                                 staff(Staff,Centro,_,_),
                                       	        faseUtente(ID,Fase),
                                       	        ((Fase == 1,indevidaFase1(Dia,Mes,Ano));
